@@ -161,7 +161,17 @@ Wait for all agents to complete, then present:
 
 ### Step 5 — Fix mode (optional)
 
-If `$ARGUMENTS` contains `--fix`: for each CRITICAL and HIGH finding, ask "Fix this? [y/n/skip all]", apply with Edit tool if yes, re-run checks to verify. Do not auto-fix MEDIUM or LOW.
+Determine which severities to fix based on the flag in `$ARGUMENTS`:
+
+| Flag | Severities fixed |
+|---|---|
+| `--fix` | CRITICAL, HIGH |
+| `--fix-medium` | CRITICAL, HIGH, MEDIUM |
+| `--fix-all` | CRITICAL, HIGH, MEDIUM, LOW |
+
+If any fix flag is present: for each finding in the applicable severities, ask "Fix this? [y/n/skip all]", apply with the Edit tool if yes, then re-run the relevant profile's checks on the fixed file to verify.
+
+If no fix flag is present, do not modify any files.
 
 ### Final output
 
