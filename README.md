@@ -66,6 +66,21 @@ Commands auto-detect the stack from project config files (no configuration neede
 - **Linters/formatters**: Ruff, ESLint, Biome, golangci-lint, and others
 - **Base branch**: uses `dev` if it exists, falls back to `main`
 
+## GitHub PR Reviews (Automated)
+
+The workflow in `.github/workflows/claude-review.yml` runs the same review profiles automatically on every pull request and posts findings as a single PR comment.
+
+### Setup
+
+1. Copy `.claude/` and `.github/` into your repo
+2. Add your Anthropic API key as a repository secret named `ANTHROPIC_API_KEY`
+   - GitHub repo → Settings → Secrets and variables → Actions → New repository secret
+3. Open a PR — the review runs automatically
+
+The workflow auto-detects which profiles to run based on changed files, same as `/cr` locally.
+
 ## Usage
 
-Copy the `.claude/` folder into any project. For project-specific overrides, edit the profiles directly — the files are designed to be modified per repo.
+Copy `.claude/` into any project. Also copy `.github/` if you want automated PR reviews.
+
+For project-specific overrides, edit the profiles directly — the files are designed to be modified per repo.

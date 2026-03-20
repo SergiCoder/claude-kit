@@ -1,0 +1,63 @@
+name: Claude Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_args: --model claude-opus-4-6
+          prompt: |
+            Review the changes in this pull request using the review profiles defined in `.claude/review/profiles/`.
+
+            ## Instructions
+
+            1. Determine the base branch (use `dev` if it exists, otherwise `main`)
+            2. Get the list of changed files: `git diff origin/$BASE...HEAD --name-only`
+            3. Auto-detect which profiles to run based on changed file paths, following the rules in `.claude/commands/cr.md`
+            4. Read each selected profile from `.claude/review/profiles/<profile>.md`
+            5. Run all profiles (in the same conversation, sequentially) and collect findings
+            6. Post a single unified review comment with this structure:
+
+            ```
+            # Code Review
+
+            **Files changed:** <count>
+            **Profiles run:** <list>
+
+            ---
+
+            ## Critical & High Findings
+            <grouped by file, deduplicated across profiles>
+
+            ## Medium Findings
+            <grouped by file>
+
+            ## Low Findings
+            <grouped by file>
+
+            ## Summary
+
+            | Profile | Critical | High | Medium | Low |
+            |---|---|---|---|---|
+            | ... | ... | ... | ... | ... |
+            | **Total** | **X** | **X** | **X** | **X** |
+            ```
+
+            If there are no findings, post: "No issues found. Ready to merge."
+
+            Do not auto-fix anything — report only.
