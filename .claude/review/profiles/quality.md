@@ -50,7 +50,7 @@ Review **changed files** in the diff. For duplication checks, also search shared
 - [ ] Conditionals with more than 3 boolean operators — extract to a named boolean or guard clause
 
 ### Size Thresholds
-- [ ] No function exceeding 200 lines (excluding comments and blank lines)
+- [ ] No function or method exceeding 30 lines (excluding comments and blank lines) — split into smaller, focused functions
 - [ ] No component file exceeding 300 lines (excluding imports, type definitions, and comments)
 
 ### Configuration Bloat
