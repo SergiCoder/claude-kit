@@ -1,5 +1,5 @@
 ---
-allowed-tools: Bash(git diff*), Bash(git log*), Bash(git branch*), Bash(git status*), Read, Edit, Write, Glob, Grep, Agent
+allowed-tools: Bash(git diff*), Bash(git log*), Bash(git branch*), Bash(git status*), Bash(cat*), Bash(grep*), Read, Edit, Write, Glob, Grep, Agent
 description: Run multi-profile code review on the current branch
 ---
 
@@ -29,23 +29,52 @@ git diff origin/<base>...HEAD --name-only
 If the diff is empty, stop:
 > "No changes compared to `<base>` — nothing to review."
 
-### Step 2 — Select profiles
+### Step 2 — Detect stack
 
-Available profiles are in `skills/` (one subdirectory per profile, each containing a `SKILL.md` file).
+Read the following files if they exist to detect languages and frameworks in use:
+- `package.json` — for JS/TS framework detection
+- `pyproject.toml` or `requirements.txt` — for Python framework detection
+- `go.mod` — for Go module and framework detection
 
-**If profiles were specified in `$ARGUMENTS`:** run only those.
+**Language detection** (from changed file extensions):
 
-**If no profiles specified**, auto-detect from changed file paths:
-
-| Changed files match | Profiles to run |
+| Changed files include | Languages detected |
 |---|---|
-| `*.py` | security, quality, stack, performance, testing |
-| `*.go` | security, quality, stack, performance, testing |
-| `*.ts`, `*.tsx`, `*.js`, `*.jsx` | security, quality, stack, performance, testing |
-| `*.vue`, `*.svelte` | security, quality, stack, performance |
-| `Dockerfile*`, `docker-compose*`, `infra/**`, `.github/workflows/**` | security |
-| `*.md`, `CLAUDE.md`, `README*` | documentation |
-| `.env*` (committed only) | security |
+| `*.py` | python |
+| `*.ts`, `*.tsx`, `*.js`, `*.jsx`, `*.vue`, `*.svelte` | typescript |
+| `*.go` | go |
+
+**Framework detection** (from config files):
+
+| Signal | Framework |
+|---|---|
+| `package.json` contains `"next"` in dependencies | nextjs |
+| `package.json` contains `"nuxt"` in dependencies | nuxt |
+| `package.json` contains `"@sveltejs/kit"` in dependencies | sveltekit |
+| `pyproject.toml` or `requirements.txt` contains `django` | django |
+| `pyproject.toml` or `requirements.txt` contains `flask` | flask |
+| `pyproject.toml` or `requirements.txt` contains `fastapi` | fastapi |
+| `go.mod` contains `chi`, `gin`, `echo`, or changed files import `net/http` | go-http |
+
+Build the list of stack skills to run: one per detected language + one per detected framework. A framework skill replaces language-level checks for framework-specific rules but does NOT replace the base language skill (e.g., `django` + `python` both run).
+
+### Step 3 — Select profiles
+
+**If profiles were specified in `$ARGUMENTS`:** run only those (skip auto-detection).
+
+**If no profiles specified**, select profiles based on changed files and detected stack:
+
+| Condition | Profiles to run |
+|---|---|
+| Any source code changed | quality + all detected stack skills |
+| Any source code changed | security, performance, testing |
+| Any `*.py` | stack-python + any detected Python framework skill |
+| Any `*.ts`, `*.tsx`, `*.js`, `*.jsx` | stack-typescript + any detected JS framework skill |
+| Any `*.go` | stack-go + stack-go-http (if detected) |
+| Any `*.vue`, `*.svelte` | stack-typescript (Vue/Svelte use TS idioms) |
+| Any `*.md`, `CLAUDE.md`, `README*` | documentation |
+| `Dockerfile*`, `docker-compose*`, `infra/**`, `.github/workflows/**` | security only |
+| `.env*` (committed only) | security only |
 
 Deduplicate. Always include `quality` if any source code changed. Always include `documentation` if any `.md` file changed.
 
@@ -54,13 +83,13 @@ Deduplicate. Always include `quality` if any source code changed. Always include
 Each profile ONLY reports findings within its domain. If a finding could belong to multiple profiles, it belongs to the FIRST matching profile in this list:
 
 1. **quality**: DRY violations, dead code, complexity, stdlib reinvention, over-abstraction, size thresholds
-2. **stack**: Language idioms, type safety, error handling conventions, framework-specific patterns
+2. **stack-***: Language idioms, type safety, error handling conventions, framework-specific patterns
 3. **security**: Authentication, authorization, injection, secrets, headers, rate limiting
 4. **performance**: Query patterns, caching, async correctness, indexes, frontend rendering
 5. **documentation**: Doc accuracy, staleness, completeness
 6. **testing**: Test coverage gaps
 
-### Step 3 — Run reviews in parallel
+### Step 4 — Run reviews in parallel
 
 For each selected profile, read `skills/<profile>/SKILL.md` and launch an Agent with `subagent_type: "general-purpose"` and `run_in_background: true`.
 
@@ -97,12 +126,8 @@ If any criterion fails, do not report the finding.
 Each finding must include a root-cause explanation: what structural design problem causes this issue, and what the correct design would be. Do not report symptoms (e.g., "this function is too long") without the underlying cause (e.g., "this function mixes I/O with business logic — extract business logic into a pure function").
 
 ## Ownership Boundary
-Only report findings within your profile's domain:
-- quality: DRY violations, dead code, complexity, stdlib reinvention, over-abstraction, size thresholds
-- stack: Language idioms, type safety, error handling conventions, framework-specific patterns
-- security: Authentication, authorization, injection, secrets, headers, rate limiting
-- performance: Query patterns, caching, async correctness, indexes, frontend rendering
-If a finding crosses domains, defer to the profile listed first above.
+Only report findings within your profile's domain as defined in the Profile Rules above.
+If a finding crosses domains, defer to the profile listed first in the ownership boundary list.
 
 Be specific: file paths, line numbers, concrete fix suggestions.
 Do not report issues outside the diff unless the quality profile's search protocol requires it.
@@ -153,7 +178,7 @@ You have permission to edit and create test files.
 
 Launch ALL agents in parallel. Do NOT run sequentially.
 
-### Step 4 — Collect and present results
+### Step 5 — Collect and present results
 
 Wait for all agents to complete, then present:
 
@@ -163,6 +188,7 @@ Wait for all agents to complete, then present:
 **Branch:** <branch>
 **Base:** <base>
 **Files changed:** <count>
+**Stack detected:** <languages and frameworks>
 **Profiles run:** <list>
 
 ---
@@ -190,7 +216,7 @@ Wait for all agents to complete, then present:
 | **Total (deduplicated)** | **X** | **X** | **X** | **X** |
 ```
 
-### Step 5 — Fix mode (optional)
+### Step 6 — Fix mode (optional)
 
 Determine which severities to fix based on the flag in `$ARGUMENTS`:
 
