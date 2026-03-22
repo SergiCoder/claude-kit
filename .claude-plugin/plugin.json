@@ -1,0 +1,12 @@
+{
+  "name": "claude-kit",
+  "description": "Portable Claude Code toolkit — custom commands and review skills designed as a starting point for any repo.",
+  "version": "1.0.0",
+  "author": {
+    "name": "SergiCoder",
+    "url": "https://github.com/SergiCoder"
+  },
+  "homepage": "https://github.com/SergiCoder/claude-kit",
+  "repository": "https://github.com/SergiCoder/claude-kit",
+  "license": "MIT"
+}
