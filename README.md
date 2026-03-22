@@ -14,26 +14,49 @@ Multi-profile code review, conventional commits, branching, and PR workflow — 
 
 ## Code Review
 
-`/prism:cr` auto-detects which profiles to run based on changed file paths. You can also specify profiles explicitly:
+`/prism:cr` auto-detects the stack from config files and runs only the relevant reviewers. You can also specify profiles explicitly:
 
 ```bash
-/prism:cr                        # auto-detect profiles
+/prism:cr                        # auto-detect stack and profiles
 /prism:cr security,performance   # specific profiles only
 /prism:cr --fix                  # review + interactively fix CRITICAL and HIGH
 /prism:cr --fix-medium           # review + fix CRITICAL, HIGH, and MEDIUM
 /prism:cr --fix-all              # review + fix all severities
 ```
 
-### Review Profiles
+### Core Profiles
 
 | Profile | What it checks |
 |---|---|
 | `security` | Auth, injection, secrets, headers, rate limiting, data exposure |
 | `quality` | Dead code, duplication, stdlib/dependency reinvention, verbose patterns, size thresholds |
-| `stack` | Language idioms, type safety, error handling — Python, TypeScript, Go + framework best practices (Django, Flask, FastAPI, Next.js, Nuxt, SvelteKit, Go) |
 | `performance` | N+1 queries, indexes, async correctness, caching, frontend rendering |
 | `documentation` | Fixes docs directly — CLAUDE.md, README, docstrings, inline comments |
 | `testing` | Writes missing tests directly — happy path, error cases, edge cases |
+
+### Stack Profiles (auto-detected)
+
+| Profile | Language / Framework |
+|---|---|
+| `stack-python` | Python idioms, type safety, error handling |
+| `stack-typescript` | TypeScript/JS idioms, type safety, error handling |
+| `stack-go` | Go idioms, concurrency, type safety |
+| `stack-django` | Models, queries, views, settings, migrations |
+| `stack-flask` | Structure, blueprints, error handling |
+| `stack-fastapi` | Routes, dependencies, Pydantic v2 |
+| `stack-react` | Hooks, state, memoization, accessibility |
+| `stack-vue` | Composition API, reactivity, Pinia |
+| `stack-nextjs` | App Router, server/client components, performance |
+| `stack-nuxt` | Composables, SSR correctness |
+| `stack-sveltekit` | Svelte 5 runes, data loading, form actions |
+| `stack-express` | Middleware, async error handling, input validation |
+| `stack-spring` | Layers, DI, JPA, error handling, configuration |
+| `stack-laravel` | Eloquent, controllers, validation, migrations |
+| `stack-aspnet` | Controllers, DI lifetimes, EF Core, configuration |
+| `stack-rails` | MVC, ActiveRecord, security, migrations |
+| `stack-go-http` | Handlers, middleware, error responses |
+
+Stack detection is automatic from: `package.json`, `pyproject.toml`, `requirements.txt`, `go.mod`, `pom.xml`, `build.gradle`, `composer.json`, `Gemfile`, `*.csproj`.
 
 ## Stack Support
 
@@ -57,10 +80,26 @@ prism/
 └── skills/                  # model-invoked review profiles
     ├── security/SKILL.md
     ├── quality/SKILL.md
-    ├── stack/SKILL.md
     ├── performance/SKILL.md
     ├── documentation/SKILL.md
-    └── testing/SKILL.md
+    ├── testing/SKILL.md
+    ├── stack-python/SKILL.md
+    ├── stack-typescript/SKILL.md
+    ├── stack-go/SKILL.md
+    ├── stack-django/SKILL.md
+    ├── stack-flask/SKILL.md
+    ├── stack-fastapi/SKILL.md
+    ├── stack-react/SKILL.md
+    ├── stack-vue/SKILL.md
+    ├── stack-nextjs/SKILL.md
+    ├── stack-nuxt/SKILL.md
+    ├── stack-sveltekit/SKILL.md
+    ├── stack-express/SKILL.md
+    ├── stack-spring/SKILL.md
+    ├── stack-laravel/SKILL.md
+    ├── stack-aspnet/SKILL.md
+    ├── stack-rails/SKILL.md
+    └── stack-go-http/SKILL.md
 ```
 
 ## GitHub PR Reviews (Automated)
