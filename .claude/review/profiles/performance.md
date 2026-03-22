@@ -35,14 +35,14 @@ Trigger on source code changes. Focus by file type:
 - [ ] Connection pools properly sized
 
 ### Caching
-- [ ] Immutable or infrequently-changing data is cached — not re-fetched per request
+- [ ] Data fetched identically more than once per request cycle, or fetched on every request when it changes less than once per hour, should be cached
 - [ ] Cache keys include all relevant dimensions to prevent stale data
 - [ ] Cache invalidation strategy exists — not just TTL for mutable data
 
 ### Frontend Performance
 - [ ] No client-side data fetching for data that could be server-rendered
 - [ ] Images: correct format, responsive sizes, lazy loading
-- [ ] Heavy components dynamically imported / code-split
+- [ ] Components importing packages >50KB gzipped for operations achievable with <20 lines of code should be dynamically imported or replaced
 - [ ] No layout shifts — dimensions specified for dynamic content
 - [ ] No large library imports for trivial operations
 

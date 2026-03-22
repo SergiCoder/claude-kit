@@ -39,17 +39,26 @@ Available profiles are in `.claude/review/profiles/` (one `.md` file per profile
 
 | Changed files match | Profiles to run |
 |---|---|
-| `*.py` | security, language, performance, reuse, simplifier, testing |
-| `*.go` | security, language, performance, reuse, simplifier, testing |
-| `*.ts`, `*.tsx`, `*.js`, `*.jsx` | security, language, performance, reuse, simplifier, testing |
-| `*.vue`, `*.svelte` | security, language, performance, simplifier |
+| `*.py` | security, quality, stack, performance, testing |
+| `*.go` | security, quality, stack, performance, testing |
+| `*.ts`, `*.tsx`, `*.js`, `*.jsx` | security, quality, stack, performance, testing |
+| `*.vue`, `*.svelte` | security, quality, stack, performance |
 | `Dockerfile*`, `docker-compose*`, `infra/**`, `.github/workflows/**` | security |
 | `*.md`, `CLAUDE.md`, `README*` | documentation |
 | `.env*` (committed only) | security |
 
-Deduplicate. Always include `simplifier` if any source code changed. Always include `documentation` if any `.md` file changed.
+Deduplicate. Always include `quality` if any source code changed. Always include `documentation` if any `.md` file changed.
 
-If a `framework.md` profile exists in `.claude/review/profiles/`, include it when source code changes.
+#### Profile ownership boundaries
+
+Each profile ONLY reports findings within its domain. If a finding could belong to multiple profiles, it belongs to the FIRST matching profile in this list:
+
+1. **quality**: DRY violations, dead code, complexity, stdlib reinvention, over-abstraction, size thresholds
+2. **stack**: Language idioms, type safety, error handling conventions, framework-specific patterns
+3. **security**: Authentication, authorization, injection, secrets, headers, rate limiting
+4. **performance**: Query patterns, caching, async correctness, indexes, frontend rendering
+5. **documentation**: Doc accuracy, staleness, completeness
+6. **testing**: Test coverage gaps
 
 ### Step 3 — Run reviews in parallel
 
@@ -68,13 +77,35 @@ Read CLAUDE.md (and any sub-CLAUDE.md files) for project rules and architecture 
 ## Your Task
 1. Get the diff: `git diff origin/<base>...HEAD`
 2. Read the changed files relevant to your profile
-3. For the REUSE profile: also search the broader codebase for existing implementations that overlap with new code
-4. Apply every rule in your checklist against the changed code
-5. Report findings using the output format in your profile rules
-6. Skip rules with no violations — only report issues
+3. For the QUALITY profile: also search the broader codebase for existing implementations using the Search Protocol defined in the profile
+4. Process every rule in your checklist **in document order**. For each rule:
+   a. State the rule
+   b. Identify relevant code in the diff
+   c. Determine PASS or FINDING with a one-line justification
+   Rules with no relevant code in the diff: PASS (not applicable).
+5. After processing all rules, compile findings into the output format defined in your profile
+6. Only report findings — do not include PASS results in the final output
+
+## Concreteness Gate
+Before reporting any finding, verify it meets ALL of these criteria:
+- You can point to a specific line or range in the diff
+- You can name the exact rule from the checklist it violates
+- The fix is a concrete code change, not a design opinion
+If any criterion fails, do not report the finding.
+
+## Root-Cause Requirement
+Each finding must include a root-cause explanation: what structural design problem causes this issue, and what the correct design would be. Do not report symptoms (e.g., "this function is too long") without the underlying cause (e.g., "this function mixes I/O with business logic — extract business logic into a pure function").
+
+## Ownership Boundary
+Only report findings within your profile's domain:
+- quality: DRY violations, dead code, complexity, stdlib reinvention, over-abstraction, size thresholds
+- stack: Language idioms, type safety, error handling conventions, framework-specific patterns
+- security: Authentication, authorization, injection, secrets, headers, rate limiting
+- performance: Query patterns, caching, async correctness, indexes, frontend rendering
+If a finding crosses domains, defer to the profile listed first above.
 
 Be specific: file paths, line numbers, concrete fix suggestions.
-Do not report issues outside the diff unless the reuse profile requires it.
+Do not report issues outside the diff unless the quality profile's search protocol requires it.
 Group by severity: CRITICAL → HIGH → MEDIUM → LOW.
 End with: X critical, Y high, Z medium, W low.
 ```
@@ -92,7 +123,7 @@ Read CLAUDE.md and any sub-CLAUDE.md files.
 ## Your Task
 1. Get the diff: `git diff origin/<base>...HEAD`
 2. Read all changed files and all documentation files
-3. Check every rule in the profile
+3. Process every rule in document order — check each one systematically
 4. For each issue, fix it directly using the Edit tool
 5. Summarize all fixes applied
 

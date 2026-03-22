@@ -15,12 +15,10 @@ Portable Claude Code toolkit — custom commands and review profiles designed as
 └── review/
     └── profiles/      # Reviewer profiles used by /cr
         ├── documentation.md
-        ├── framework.md
-        ├── language.md
         ├── performance.md
-        ├── reuse.md
+        ├── quality.md
         ├── security.md
-        ├── simplifier.md
+        ├── stack.md
         └── testing.md
 ```
 
@@ -51,11 +49,9 @@ Portable Claude Code toolkit — custom commands and review profiles designed as
 | Profile | What it checks |
 |---|---|
 | `security` | Auth, injection, secrets, headers, rate limiting, data exposure |
-| `language` | Language idioms, type safety, SOLID/DRY/KISS — Python, TypeScript, Go |
-| `framework` | Framework best practices — Django, Flask, FastAPI, Next.js, Nuxt, SvelteKit, Go |
+| `quality` | Dead code, duplication, stdlib/dependency reinvention, verbose patterns, size thresholds |
+| `stack` | Language idioms, type safety, error handling — Python, TypeScript, Go + framework best practices (Django, Flask, FastAPI, Next.js, Nuxt, SvelteKit, Go) |
 | `performance` | N+1 queries, indexes, async correctness, caching, frontend rendering |
-| `reuse` | Duplication across modules, stdlib/dependency reinvention |
-| `simplifier` | Dead code, over-abstraction, redundancy, verbose patterns |
 | `documentation` | Fixes docs directly — CLAUDE.md, README, docstrings, inline comments |
 | `testing` | Writes missing tests directly — happy path, error cases, edge cases |
 
