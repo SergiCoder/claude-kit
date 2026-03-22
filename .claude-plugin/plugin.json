@@ -1,12 +1,12 @@
 {
-  "name": "claude-kit",
-  "description": "Portable Claude Code toolkit — custom commands and review skills designed as a starting point for any repo.",
+  "name": "prism",
+  "description": "Multi-profile code review, conventional commits, branching, and PR workflow for any repo. Runs security, quality, stack, performance, documentation, and testing reviewers in parallel.",
   "version": "1.0.0",
   "author": {
     "name": "SergiCoder",
     "url": "https://github.com/SergiCoder"
   },
-  "homepage": "https://github.com/SergiCoder/claude-kit",
-  "repository": "https://github.com/SergiCoder/claude-kit",
+  "homepage": "https://github.com/SergiCoder/prism",
+  "repository": "https://github.com/SergiCoder/prism",
   "license": "MIT"
 }
