@@ -16,7 +16,7 @@ jobs:
   review:
     if: >-
       (github.event_name == 'pull_request' && github.event.pull_request.user.login == github.repository_owner) ||
-      (github.event_name == 'issue_comment' && github.event.issue.pull_request && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'issue_comment' && github.event.issue.pull_request && contains(github.event.comment.body, '@claude') && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)) ||
       github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
@@ -27,7 +27,7 @@ jobs:
       - uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          claude_args: --model claude-opus-4-6 --max-turns 10 --allowedTools "Bash(git diff*),Bash(git log*),Bash(git show*),Read,Glob,Grep,mcp__github__*"
+          claude_args: --model claude-opus-4-6 --max-turns 30 --allowedTools "Bash(git diff*),Bash(git log*),Bash(git show*),Bash(gh api*),Read,Glob,Grep,mcp__github__*,mcp__github_inline_comment__*"
           prompt: |
             Review the changes in this pull request using the skill profiles in `skills/`.
             Follow the detection rules defined in `commands/review.md`.
@@ -40,33 +40,31 @@ jobs:
             4. Auto-detect which profiles to run following the rules in `commands/review.md` (Step 3)
             5. Read each selected profile from `skills/<profile>/SKILL.md`
             6. Run all profiles in parallel and collect findings
-            7. Post a single unified review comment with this structure:
+            7. Fetch existing review comments to avoid duplicates:
+               gh api repos/$REPO_OWNER/$REPO_NAME/pulls/$PR_NUMBER/comments \
+                 --jq '.[] | select(.user.login == "github-actions[bot]" or .user.type == "Bot") | {path, line, body}'
+            8. For EACH finding, check if a comment already exists on the same file and line
+               with the same issue title. If it does, SKIP it. Only post NEW findings using
+               mcp__github_inline_comment__create_inline_comment with confirmed=true.
+               IMPORTANT: You can only comment on lines that appear in the PR diff.
+               If a finding relates to a line outside the diff, include it in the summary instead.
+               Format each inline comment as:
+               **<SEVERITY>** — <Category>: <Short title>
+               <Explanation and recommendation>
+            9. After posting all inline comments, update the main comment with a summary:
 
-            ```
             # Code Review
 
             **Files changed:** <count>
             **Stack detected:** <languages and frameworks>
             **Profiles run:** <list>
-
-            ---
-
-            ## Critical & High Findings
-            <grouped by file, deduplicated across profiles>
-
-            ## Medium Findings
-            <grouped by file>
-
-            ## Low Findings
-            <grouped by file>
-
-            ## Summary
+            **New inline comments:** <count>
+            **Previously posted:** <count> (skipped)
 
             | Profile | Critical | High | Medium | Low |
             |---|---|---|---|---|
             | ... | ... | ... | ... | ... |
             | **Total** | **X** | **X** | **X** | **X** |
-            ```
 
             If there are no findings, post: "No issues found. Ready to merge."
 
