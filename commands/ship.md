@@ -1,5 +1,5 @@
 ---
-allowed-tools: Bash(git diff*), Bash(git status*), Bash(git ls-files*), Bash(git branch*), Bash(git remote*), Bash(git add*), Bash(git commit*), Bash(git push*), Bash(git restore --staged*), Bash(test -f .git/MERGE_HEAD*), Read, Glob, Grep
+allowed-tools: Bash(git diff*), Bash(git status*), Bash(git ls-files*), Bash(git branch*), Bash(git remote*), Bash(git add*), Bash(git commit*), Bash(git push*), Bash(git restore --staged*), Bash(test -f .git/MERGE_HEAD*), Bash(gh pr view*), Bash(gh api*), Read, Glob, Grep
 description: Pre-ship hygiene check, conventional commit, and push
 ---
 Analyze the current git repository state and create well-structured conventional commits, then push.
@@ -82,9 +82,30 @@ git push
 git push -u origin <branch-name>
 ```
 
+### Step 7 — Resolve inline review comments
+After pushing, check if there is an open PR for the current branch:
+```bash
+gh pr view --json number,url 2>/dev/null
+```
+
+If a PR exists:
+1. Get the list of files that were part of the commits just pushed (from Steps 4-5).
+2. Fetch all bot inline review comments on the PR that have no reply yet:
+   ```bash
+   gh api repos/{owner}/{repo}/pulls/{number}/comments \
+     --jq '[.[] | select((.user.type == "Bot" or .user.login == "github-actions[bot]") and .in_reply_to_id == null) | {id, path, line, body}]'
+   ```
+3. For each unreplied bot comment where `path` matches one of the files just committed:
+   - Read the comment body to understand what issue was flagged.
+   - Check the current state of the file to confirm the issue was addressed by the commits.
+   - If fixed, reply with a short, friendly message explaining what was done. Be specific about the fix — reference the actual change, not just "fixed". Vary your tone naturally (don't repeat the same phrase across replies).
+   - If NOT fixed (the code still has the issue), skip it silently.
+4. If no PR exists or no comments match, skip this step silently.
+
 ### Final output
 ```
 Commit 1: feat(auth): add JWT refresh token rotation
 Commit 2: fix(api): handle empty response from upstream
 Pushed to origin/<branch>
+Resolved 3 review comments on PR #42
 ```
