@@ -1,11 +1,15 @@
 {
   "name": "prism",
   "description": "Multi-profile code review, conventional commits, branching, and PR workflow for any repo.",
+  "owner": {
+    "name": "SergiCoder",
+    "url": "https://github.com/SergiCoder"
+  },
   "plugins": [
     {
       "name": "prism",
       "description": "Multi-profile code review, conventional commits, branching, and PR workflow for any repo. Runs security, quality, stack, performance, documentation, and testing reviewers in parallel.",
-      "path": "."
+      "source": "."
     }
   ]
 }
