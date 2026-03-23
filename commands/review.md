@@ -110,89 +110,31 @@ Each profile ONLY reports findings within its domain. If a finding could belong 
 
 ### Step 4 — Run reviews in parallel
 
-For each selected profile, read `skills/<profile>/SKILL.md` and launch an Agent with `subagent_type: "general-purpose"` and `run_in_background: true`.
+For each selected profile, launch an Agent with `subagent_type: "general-purpose"` and `run_in_background: true` using this prompt:
 
-**For standard profiles** (all except `documentation` and `testing`):
 ```
 You are reviewing code changes for a pull request.
 
-## Profile Rules
-<contents of skills/<profile>/SKILL.md>
+## Profile
+Read and follow `skills/<profile>/SKILL.md`. It defines your scope, rules, behavior, and output format.
 
-## Project Context
-Read CLAUDE.md (and any sub-CLAUDE.md files) for project rules and architecture decisions.
+## Context
+- Read CLAUDE.md (and any sub-CLAUDE.md files) for project rules and architecture decisions.
+- Get the diff: `git diff origin/<base>...HEAD`
+- Read changed files relevant to your profile's scope.
 
-## Your Task
-1. Get the diff: `git diff origin/<base>...HEAD`
-2. Read the changed files relevant to your profile
-3. For the QUALITY profile: also search the broader codebase for existing implementations using the Search Protocol defined in the profile
-4. Process every rule in your checklist **in document order**. For each rule:
-   a. State the rule
-   b. Identify relevant code in the diff
-   c. Determine PASS or FINDING with a one-line justification
-   Rules with no relevant code in the diff: PASS (not applicable).
-5. After processing all rules, compile findings into the output format defined in your profile
-6. Only report findings — do not include PASS results in the final output
-
-## Concreteness Gate
-Before reporting any finding, verify it meets ALL of these criteria:
+## Review Standards
+Before reporting any finding, verify ALL of these:
 - You can point to a specific line or range in the diff
 - You can name the exact rule from the checklist it violates
 - The fix is a concrete code change, not a design opinion
 If any criterion fails, do not report the finding.
 
-## Root-Cause Requirement
-Each finding must include a root-cause explanation: what structural design problem causes this issue, and what the correct design would be. Do not report symptoms (e.g., "this function is too long") without the underlying cause (e.g., "this function mixes I/O with business logic — extract business logic into a pure function").
+Each finding must include a root-cause explanation: what structural design problem causes the issue and what the correct design would be.
 
 ## Ownership Boundary
-Only report findings within your profile's domain as defined in the Profile Rules above.
+Only report findings within your profile's domain.
 If a finding crosses domains, defer to the profile listed first in the ownership boundary list.
-
-Be specific: file paths, line numbers, concrete fix suggestions.
-Do not report issues outside the diff unless the quality profile's search protocol requires it.
-Group by severity: CRITICAL → HIGH → MEDIUM → LOW.
-End with: X critical, Y high, Z medium, W low.
-```
-
-**For the `documentation` profile:**
-```
-You are a documentation reviewer that fixes issues directly.
-
-## Profile Rules
-<contents of skills/documentation/SKILL.md>
-
-## Project Context
-Read CLAUDE.md and any sub-CLAUDE.md files.
-
-## Your Task
-1. Get the diff: `git diff origin/<base>...HEAD`
-2. Read all changed files and all documentation files
-3. Process every rule in document order — check each one systematically
-4. For each issue, fix it directly using the Edit tool
-5. Summarize all fixes applied
-
-You have permission to edit documentation files.
-```
-
-**For the `testing` profile:**
-```
-You are a testing reviewer that writes missing tests directly.
-
-## Profile Rules
-<contents of skills/testing/SKILL.md>
-
-## Project Context
-Read CLAUDE.md and any sub-CLAUDE.md files for testing patterns and conventions.
-
-## Your Task
-1. Get the diff: `git diff origin/<base>...HEAD`
-2. Read changed source files to identify new/changed code that needs tests
-3. Search for existing test coverage
-4. Read existing test files to learn the project's testing style and fixtures
-5. Write missing tests directly using Edit or Write tool
-6. Summarize all tests written
-
-You have permission to edit and create test files.
 ```
 
 Launch ALL agents in parallel. Do NOT run sequentially.
