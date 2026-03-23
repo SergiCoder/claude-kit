@@ -1,5 +1,5 @@
 ---
-allowed-tools: Bash(git diff*), Bash(git status*), Bash(git ls-files*), Bash(git branch*), Bash(git remote*), Bash(git add*), Bash(git commit*), Bash(git push*), Bash(git restore --staged*), Bash(test -f .git/MERGE_HEAD*), Bash(gh pr view*), Bash(gh api*), Read, Glob, Grep
+allowed-tools: Bash(git diff*), Bash(git status*), Bash(git ls-files*), Bash(git branch*), Bash(git remote*), Bash(git add*), Bash(git commit*), Bash(git push*), Bash(git restore --staged*), Bash(test -f .git/MERGE_HEAD*), Bash(gh pr view*), Bash(gh api *), Read, Glob, Grep
 description: Pre-ship hygiene check, conventional commit, and push
 ---
 Analyze the current git repository state and create well-structured conventional commits, then push.
@@ -90,17 +90,41 @@ gh pr view --json number,url 2>/dev/null
 
 If a PR exists:
 1. Get the list of files that were part of the commits just pushed (from Steps 4-5).
-2. Fetch all bot inline review comments on the PR that have no reply yet:
+2. Fetch unresolved bot review threads and their comments:
+   ```bash
+   gh api graphql -f query='
+   {
+     repository(owner: "{owner}", name: "{repo}") {
+       pullRequest(number: {number}) {
+         reviewThreads(first: 50) {
+           nodes {
+             id
+             isResolved
+             comments(first: 1) {
+               nodes { body path }
+             }
+           }
+         }
+       }
+     }
+   }' --jq '.data.repository.pullRequest.reviewThreads.nodes[] | select(.isResolved == false) | {threadId: .id, path: .comments.nodes[0].path, body: .comments.nodes[0].body}'
+   ```
+3. Also fetch the REST comments to check for existing replies:
    ```bash
    gh api repos/{owner}/{repo}/pulls/{number}/comments \
      --jq '[.[] | select((.user.type == "Bot" or .user.login == "github-actions[bot]") and .in_reply_to_id == null) | {id, path, line, body}]'
    ```
-3. For each unreplied bot comment where `path` matches one of the files just committed:
+4. For each unresolved thread where `path` matches one of the files just committed:
    - Read the comment body to understand what issue was flagged.
    - Check the current state of the file to confirm the issue was addressed by the commits.
-   - If fixed, reply with a short, friendly message explaining what was done. Be specific about the fix — reference the actual change, not just "fixed". Vary your tone naturally (don't repeat the same phrase across replies).
+   - If fixed:
+     a. If there is no reply yet, reply with a short, friendly message explaining what was done. Be specific about the fix — reference the actual change, not just "fixed". Vary your tone naturally (don't repeat the same phrase across replies).
+     b. Resolve the thread using GraphQL:
+        ```bash
+        gh api graphql -f query='mutation { resolveReviewThread(input: {threadId: "{threadId}"}) { thread { isResolved } } }'
+        ```
    - If NOT fixed (the code still has the issue), skip it silently.
-4. If no PR exists or no comments match, skip this step silently.
+5. If no PR exists or no comments match, skip this step silently.
 
 ### Final output
 ```
