@@ -1,0 +1,11 @@
+{
+  "name": "prism",
+  "description": "Multi-profile code review, conventional commits, branching, and PR workflow for any repo.",
+  "plugins": [
+    {
+      "name": "prism",
+      "description": "Multi-profile code review, conventional commits, branching, and PR workflow for any repo. Runs security, quality, stack, performance, documentation, and testing reviewers in parallel.",
+      "path": "."
+    }
+  ]
+}
