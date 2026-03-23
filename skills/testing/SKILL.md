@@ -15,7 +15,7 @@ Trigger when any source code changes. Skip when only documentation, config, or C
 
 ### New Code Must Have Tests
 - [ ] Every new public function/method has at least one test for its happy path
-- [ ] Every new class has tests covering its public interface
+- [ ] Every new class/struct/type with behavior has tests covering its public interface
 - [ ] Every new API endpoint has tests for success response and at least one error case
 - [ ] Every new request/response schema has validation tests (valid + invalid input)
 - [ ] Every new middleware has tests proving it modifies requests/responses as intended
@@ -42,7 +42,7 @@ Trigger when any source code changes. Skip when only documentation, config, or C
 
 1. Get the diff: `git diff origin/<base>...HEAD`
 2. Identify every new or changed function, class, endpoint, and code path in source files
-3. Search the test directory for existing coverage (`tests/`, `__tests__/`, `*_test.go`, `*.test.ts`, etc.)
+3. Search for existing test files following the project's naming convention (co-located, dedicated test directory, suffix-based, etc.)
 4. Read existing test files to learn the project's testing style, fixtures, and helpers
 5. Write missing tests directly using Edit or Write tool — following existing conventions exactly
 
@@ -52,10 +52,7 @@ Trigger when any source code changes. Skip when only documentation, config, or C
 - Use existing fixtures and helpers — never create new factories if one exists
 - Place tests in the correct location matching the project's convention
 - If a test file already exists for the module, add to it; if not, create one following the naming convention
-- Language-specific defaults (only if project doesn't override):
-  - Python: `pytest`, plain functions (not `unittest.TestCase`)
-  - TypeScript/JavaScript: `vitest` or `jest`, depending on what's installed
-  - Go: standard `testing` package, table-driven tests
+- Detect the test runner from project config (`package.json` test script, `pytest.ini`, `go.mod`, `Makefile` test target, etc.) — follow it rather than assuming a default
 
 ## Behavior
 
