@@ -10,7 +10,7 @@ Multi-profile code review, conventional commits, branching, and PR workflow — 
 | `/prism:ship` | Pre-ship hygiene check, auto-format, conventional commits, push |
 | `/prism:review [profiles] [--fix\|--fix-medium\|--fix-all]` | Run multi-profile code review in parallel |
 | `/prism:open-pr` | Sync base branch, run tests, open a PR |
-| `/prism:release` | Open a release PR from `dev` into `main` |
+| `/prism:release` | Open a release PR from `dev` into `main` (for repos using a dev branch) |
 
 ## Code Review
 
@@ -63,7 +63,7 @@ Stack detection is automatic from: `package.json`, `pyproject.toml`, `requiremen
 Commands auto-detect the stack from project config files (no configuration needed):
 - **Test runners**: pytest, go test, npm/pnpm/yarn test, make test
 - **Linters/formatters**: Ruff, ESLint, Biome, golangci-lint, and others
-- **Base branch**: uses `dev` if it exists, falls back to `main`
+- **Base branch**: `main`
 
 ## Plugin Structure
 
@@ -104,7 +104,7 @@ prism/
 
 ## GitHub PR Reviews (Automated)
 
-The workflow in `.github/workflows/claude-review.yml` runs the same review profiles automatically on every pull request and posts findings as a single PR comment.
+The workflow in `.github/workflows/claude-review.yml` runs the same review profiles automatically on maintainer PRs, and can be triggered manually via `workflow_dispatch` for any PR.
 
 ### Setup
 
@@ -113,3 +113,7 @@ The workflow in `.github/workflows/claude-review.yml` runs the same review profi
    - GitHub repo → Settings → Secrets and variables → Actions → New repository secret
 3. Copy `.github/workflows/claude-review.yml` into your repo
 4. Open a PR — the review runs automatically
+
+## Contributing
+
+Fork the repo and open a PR against `main`.

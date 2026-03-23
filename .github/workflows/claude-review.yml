@@ -3,15 +3,16 @@ name: Claude Code Review
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+  workflow_dispatch:
 
 permissions:
   contents: read
   pull-requests: write
   issues: write
-  id-token: write
 
 jobs:
   review:
+    if: github.event.pull_request.user.login == 'SergiCoder' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -65,14 +66,3 @@ jobs:
             If there are no findings, post: "No issues found. Ready to merge."
 
             Do not auto-fix anything — report only.
-
-  auto-approve:
-    needs: review
-    if: github.event.pull_request.user.login == 'SergiCoder'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Approve PR
-        run: gh pr review ${{ github.event.pull_request.number }} --approve --body "Maintainer PR — auto-approved."
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_REPO: ${{ github.repository }}
