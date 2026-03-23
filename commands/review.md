@@ -256,5 +256,5 @@ Review complete: X critical, Y high, Z medium, W low findings across N profiles.
 ```
 
 - Critical findings: "CRITICAL findings must be resolved before opening a PR."
-- High or below only: "HIGH findings should be resolved before merge. Run `/prism:cr --fix` to address them."
+- High or below only: "HIGH findings should be resolved before merge. Run `/prism:review --fix` to address them."
 - Clean: "No critical or high findings. Ready for PR."

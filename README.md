@@ -8,20 +8,20 @@ Multi-profile code review, conventional commits, branching, and PR workflow — 
 |---|---|
 | `/prism:branch <type> <name>` | Create a `feature/`, `fix/`, or `hotfix/` branch from the correct base |
 | `/prism:commit` | Pre-commit hygiene check, auto-format, conventional commits, push |
-| `/prism:cr [profiles] [--fix\|--fix-medium\|--fix-all]` | Run multi-profile code review in parallel |
+| `/prism:review [profiles] [--fix\|--fix-medium\|--fix-all]` | Run multi-profile code review in parallel |
 | `/prism:pr` | Sync base branch, run tests, open a PR |
 | `/prism:release` | Open a release PR from `dev` into `main` |
 
 ## Code Review
 
-`/prism:cr` auto-detects the stack from config files and runs only the relevant reviewers. You can also specify profiles explicitly:
+`/prism:review` auto-detects the stack from config files and runs only the relevant reviewers. You can also specify profiles explicitly:
 
 ```bash
-/prism:cr                        # auto-detect stack and profiles
-/prism:cr security,performance   # specific profiles only
-/prism:cr --fix                  # review + interactively fix CRITICAL and HIGH
-/prism:cr --fix-medium           # review + fix CRITICAL, HIGH, and MEDIUM
-/prism:cr --fix-all              # review + fix all severities
+/prism:review                        # auto-detect stack and profiles
+/prism:review security,performance   # specific profiles only
+/prism:review --fix                  # review + interactively fix CRITICAL and HIGH
+/prism:review --fix-medium           # review + fix CRITICAL, HIGH, and MEDIUM
+/prism:review --fix-all              # review + fix all severities
 ```
 
 ### Core Profiles
@@ -74,7 +74,7 @@ prism/
 ├── commands/                # user-invoked slash commands
 │   ├── branch.md
 │   ├── commit.md
-│   ├── cr.md
+│   ├── review.md
 │   ├── pr.md
 │   └── release.md
 └── skills/                  # model-invoked review profiles
