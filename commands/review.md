@@ -91,11 +91,10 @@ Build the list of stack skills to run: one per detected language + one per detec
 | Any `*.rb` | stack-rails (if detected) |
 | Any `*.vue` | stack-vue + stack-typescript |
 | Any `*.svelte` | stack-typescript |
-| Any `*.md`, `CLAUDE.md`, `README*` | documentation |
 | `Dockerfile*`, `docker-compose*`, `infra/**`, `.github/workflows/**` | security only |
 | `.env*` (committed only) | security only |
 
-Deduplicate. Always include `quality` if any source code changed. Always include `documentation` if any `.md` file changed.
+Deduplicate. Always include `quality` if any source code changed. Always include `documentation` if any source code changed.
 
 #### Profile ownership boundaries
 

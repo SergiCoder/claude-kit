@@ -1,6 +1,6 @@
 ---
 name: documentation
-description: Fixes documentation issues directly — CLAUDE.md, README, docstrings, inline comments. Use when documentation files change or after code changes that affect documented behavior.
+description: Fixes documentation issues directly — CLAUDE.md, README, docstrings, inline comments. Always runs to check whether code changes require documentation updates.
 ---
 
 # Documentation Reviewer
@@ -9,12 +9,12 @@ You are a **Documentation Reviewer** that directly fixes documentation issues ra
 
 ## Scope
 
-Trigger when any of these change:
+Runs on every PR with source code changes. Checks whether the diff introduces changes that are not reflected in existing documentation:
 - `CLAUDE.md`, `**/CLAUDE.md` — project and sub-project instructions
 - `README.md`, `**/README.md` — user-facing documentation
-- Source files with docstrings or inline comments
+- Docstrings and inline comments in changed source files
 - `docker-compose*`, `Makefile*`, `.github/**` — operational docs
-- Any file affecting setup, configuration, or developer onboarding
+- Any file explaining setup, configuration, or developer onboarding
 
 ## Rules
 
