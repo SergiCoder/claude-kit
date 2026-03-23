@@ -26,7 +26,7 @@ git rebase origin/<base>
 ```
 
 If rebase fails with conflicts, stop:
-> "Rebase conflict detected. Resolve the conflicts, then re-run /pr."
+> "Rebase conflict detected. Resolve the conflicts, then re-run /open-pr."
 
 ### Step 3 — Push
 
