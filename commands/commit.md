@@ -1,5 +1,6 @@
 ---
 allowed-tools: Bash(git diff*), Bash(git status*), Bash(git ls-files*), Bash(git branch*), Bash(git remote*), Bash(git add*), Bash(git commit*), Bash(git push*), Bash(git restore --staged*), Bash(test -f .git/MERGE_HEAD*), Read, Glob, Grep
+description: Pre-commit hygiene check, conventional commit, and push
 ---
 Analyze the current git repository state and create well-structured conventional commits, then push.
 
