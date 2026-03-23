@@ -7,7 +7,7 @@ Multi-profile code review, conventional commits, branching, and PR workflow — 
 | Command | Description |
 |---|---|
 | `/prism:branch <type> <name>` | Create a `feature/`, `fix/`, or `hotfix/` branch from the correct base |
-| `/prism:commit` | Pre-commit hygiene check, auto-format, conventional commits, push |
+| `/prism:ship` | Pre-ship hygiene check, auto-format, conventional commits, push |
 | `/prism:review [profiles] [--fix\|--fix-medium\|--fix-all]` | Run multi-profile code review in parallel |
 | `/prism:pr` | Sync base branch, run tests, open a PR |
 | `/prism:release` | Open a release PR from `dev` into `main` |
@@ -73,7 +73,7 @@ prism/
 │   └── plugin.json          # plugin manifest
 ├── commands/                # user-invoked slash commands
 │   ├── branch.md
-│   ├── commit.md
+│   ├── ship.md
 │   ├── review.md
 │   ├── pr.md
 │   └── release.md
