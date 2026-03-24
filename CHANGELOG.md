@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-03-24
+
+### Added
+- Behavior mode routing in review agent prompt — writing profiles (testing, documentation) now receive explicit instructions to use Edit/Write tools locally instead of only reporting findings
+- CI fallback for writing profiles — when Edit/Write tools are unavailable (CI), writing profiles fall back to inline comment and reporting mode automatically
+
+### Changed
+- Review Standards and False-Positive Validation sections scoped to reporting profiles only
+- CI review prompt updated with explicit instructions for writing profile fallback to inline comments
+
 ## [1.2.0] - 2026-03-24
 
 ### Added
