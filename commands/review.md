@@ -122,7 +122,14 @@ Read and follow `skills/<profile>/SKILL.md`. It defines your scope, rules, behav
 - Get the diff: `git diff origin/<base>...HEAD`
 - Read changed files relevant to your profile's scope.
 
-## Review Standards
+## Behavior Mode
+Some profiles **write code directly** (testing, documentation) while others **report findings** (all other profiles). Your SKILL.md specifies which mode applies. Follow its behavior section exactly:
+- If your SKILL.md says to write tests, fix docs, or make code changes — do so using the Edit and Write tools. Summarize what you wrote, do not report findings by severity.
+- If your SKILL.md says to report findings — follow the Review Standards and False-Positive Validation sections below.
+
+**CI / read-only context:** If you do not have access to Edit or Write tools (e.g., running in CI), fall back to inline comment and reporting mode regardless of your profile. Post what you would have written as findings — missing tests, stale docs — with file paths, suggested content, and severity, using the same inline comment flow as reporting profiles.
+
+## Review Standards (reporting profiles only)
 Before reporting any finding, verify ALL of these:
 - You can point to a specific line or range in the diff
 - You can name the exact rule from the checklist it violates
@@ -131,7 +138,7 @@ If any criterion fails, do not report the finding.
 
 Each finding must include a root-cause explanation: what structural design problem causes the issue and what the correct design would be.
 
-## False-Positive Validation
+## False-Positive Validation (reporting profiles only)
 Before including any finding in your output, validate it is a real issue:
 
 1. **Code context** — Read the file and surrounding lines (not just the diff hunk). Does the broader context already resolve the concern? (e.g., validation in a caller, a test covering the case, a comment explaining intent)
