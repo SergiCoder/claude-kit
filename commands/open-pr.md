@@ -82,6 +82,7 @@ Build the PR body:
 <what was tested and result — e.g. "All tests pass via `pytest -q`">
 
 ## Checklist
+- [ ] Code is self-reviewed
 - [ ] Tests pass
 - [ ] Lint passes
 - [ ] No secrets committed
