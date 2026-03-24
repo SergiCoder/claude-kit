@@ -1,3 +1,24 @@
+##############################################################################
+# Prism — Claude Code Review (installable template)
+#
+# Copy this file into your repo at: .github/workflows/claude-review.yml
+#
+# Prerequisites:
+#   1. Add ANTHROPIC_API_KEY as a repository secret
+#      (Settings → Secrets and variables → Actions → New repository secret)
+#
+# How it works:
+#   - Checks out your repo + the prism plugin (skills & detection rules)
+#   - Auto-detects your stack from config files (package.json, pyproject.toml, etc.)
+#   - Runs the matching review profiles from prism's skills/
+#   - Posts inline comments on the PR and a summary table
+#
+# Triggers:
+#   - Automatically on PRs opened/reopened by the repo owner
+#   - On @claude mentions in PR comments by collaborators
+#   - Manually via workflow_dispatch
+##############################################################################
+
 name: Claude Code Review
 
 on:
@@ -24,10 +45,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Prism reviews itself — skills are already in the repo, symlink to .prism
-      # so the prompt works identically to the installable template
-      - name: Symlink prism skills
-        run: ln -s . .prism
+      - uses: actions/checkout@v4
+        with:
+          repository: SergiCoder/prism
+          path: .prism
+          sparse-checkout: |
+            skills
+            commands
 
       - uses: anthropics/claude-code-action@v1
         with:

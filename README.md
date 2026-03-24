@@ -2,19 +2,42 @@
 
 Multi-profile code review, conventional commits, branching, and PR workflow — packaged as a Claude Code plugin for any repo.
 
+## Setup
+
+### 1. Install the plugin
+
+```bash
+/plugin install SergiCoder/prism
+```
+
+This gives you all the local slash commands (`/prism:review`, `/prism:ship`, etc.).
+
+### 2. Add automated PR reviews (optional)
+
+```bash
+/prism:install-ci-review
+```
+
+Then add your Anthropic API key as a repository secret:
+- GitHub repo → Settings → Secrets and variables → Actions → New repository secret
+- Name: `ANTHROPIC_API_KEY`
+
+The workflow runs automatically on PRs opened by the repo owner, `@claude` mentions, and manual dispatch.
+
 ## Commands
 
 | Command | Description |
 |---|---|
-| `/prism:branch <type> <name>` | Create a `feature/`, `fix/`, or `hotfix/` branch from the correct base |
+| `/prism:create-branch <type> <name>` | Create a `feature/`, `fix/`, or `hotfix/` branch from the correct base |
 | `/prism:ship` | Pre-ship hygiene check, auto-format, conventional commits, push |
 | `/prism:review [profiles] [--fix\|--fix-medium\|--fix-all]` | Run multi-profile code review in parallel |
 | `/prism:open-pr` | Sync base branch, run tests, open a PR |
 | `/prism:release` | Open a release PR from `dev` into `main` (for repos using a dev branch) |
+| `/prism:install-ci-review` | Install the automated PR review workflow into the current project |
 
 ## Code Review
 
-`/prism:review` auto-detects the stack from config files and runs only the relevant reviewers. You can also specify profiles explicitly:
+`/prism:review` auto-detects the stack from config files and runs only the relevant reviewers. The same profiles run locally and in CI.
 
 ```bash
 /prism:review                        # auto-detect stack and profiles
@@ -70,14 +93,19 @@ Commands auto-detect the stack from project config files (no configuration neede
 ```
 prism/
 ├── .claude-plugin/
-│   └── plugin.json          # plugin manifest
-├── commands/                # user-invoked slash commands
-│   ├── branch.md
+│   └── plugin.json              # plugin manifest
+├── .github/workflows/
+│   └── claude-review.yml        # prism's own CI review (self-review)
+├── install/
+│   └── claude-review.yml        # installable template for other repos
+├── commands/                    # user-invoked slash commands
+│   ├── create-branch.md
 │   ├── ship.md
 │   ├── review.md
 │   ├── open-pr.md
-│   └── release.md
-└── skills/                  # model-invoked review profiles
+│   ├── release.md
+│   └── install-ci-review.md
+└── skills/                      # review profiles (used locally and in CI)
     ├── security/SKILL.md
     ├── quality/SKILL.md
     ├── performance/SKILL.md
@@ -101,18 +129,6 @@ prism/
     ├── stack-rails/SKILL.md
     └── stack-go-http/SKILL.md
 ```
-
-## GitHub PR Reviews (Automated)
-
-The workflow in `.github/workflows/claude-review.yml` runs the same review profiles automatically on maintainer PRs, and can be triggered manually via `workflow_dispatch` for any PR.
-
-### Setup
-
-1. Install the plugin: `/plugin install SergiCoder/prism`
-2. Add your Anthropic API key as a repository secret named `ANTHROPIC_API_KEY`
-   - GitHub repo → Settings → Secrets and variables → Actions → New repository secret
-3. Copy `.github/workflows/claude-review.yml` into your repo
-4. Open a PR — the review runs automatically
 
 ## Contributing
 
