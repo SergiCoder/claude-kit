@@ -22,7 +22,7 @@ Then add your Anthropic API key as a repository secret:
 - GitHub repo → Settings → Secrets and variables → Actions → New repository secret
 - Name: `ANTHROPIC_API_KEY`
 
-The workflow runs automatically on PRs opened by the repo owner, `@claude` mentions, and manual dispatch.
+The workflow runs automatically on PRs opened by the repo owner, `@prism review` comments, and manual dispatch.
 
 ## Commands
 

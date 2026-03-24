@@ -15,7 +15,7 @@
 #
 # Triggers:
 #   - Automatically on PRs opened/reopened by the repo owner
-#   - On @claude mentions in PR comments by collaborators
+#   - On "@prism review" in PR comments by collaborators
 #   - Manually via workflow_dispatch
 ##############################################################################
 
@@ -37,7 +37,7 @@ jobs:
   review:
     if: >-
       (github.event_name == 'pull_request' && github.event.pull_request.user.login == github.repository_owner) ||
-      (github.event_name == 'issue_comment' && github.event.issue.pull_request && contains(github.event.comment.body, '@claude') && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)) ||
+      (github.event_name == 'issue_comment' && github.event.issue.pull_request && contains(github.event.comment.body, '@prism review') && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)) ||
       github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
