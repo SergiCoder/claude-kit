@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-03-24
+
+### Added
+- Security checklist expanded with 13 new items: password hashing, tenant isolation, path traversal, unsafe deserialization, TLS enforcement, minimal containers, encryption at rest, audit trails, and new Cryptography and API Security sections
+- Release command now suggests a semver version bump based on conventional commits and updates the changelog
+
+### Changed
+- Removed technology-specific references from agnostic skills and commands (security, quality, performance, testing, ship, open-pr, address-review) to keep them truly stack-agnostic
+
 ## [1.1.0] - 2026-03-24
 
 ### Added
