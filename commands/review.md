@@ -131,6 +131,22 @@ If any criterion fails, do not report the finding.
 
 Each finding must include a root-cause explanation: what structural design problem causes the issue and what the correct design would be.
 
+## False-Positive Validation
+Before including any finding in your output, validate it is a real issue:
+
+1. **Code context** — Read the file and surrounding lines (not just the diff hunk). Does the broader context already resolve the concern? (e.g., validation in a caller, a test covering the case, a comment explaining intent)
+2. **Project conventions** — Check CLAUDE.md rules and existing patterns. Is the flagged code consistent with established project conventions?
+3. **Actual impact** — Is the issue reachable in practice, or is it blocked by type system guarantees, framework behavior, or upstream validation?
+4. **Diff ownership** — Is the flagged code actually changed in this PR, or is it pre-existing context?
+
+**Drop** the finding if:
+- Surrounding code already handles the concern
+- It contradicts project conventions documented in CLAUDE.md
+- The flagged code is not changed in the diff (pre-existing)
+- The recommendation is speculative ("consider", "might want to") rather than a concrete rule violation
+
+Only report findings that survive this validation.
+
 ## Ownership Boundary
 Only report findings within your profile's domain.
 If a finding crosses domains, defer to the profile listed first in the ownership boundary list.
