@@ -145,9 +145,9 @@ Use this format:
 
 | # | File | Comment | Verdict | Action |
 |---|------|---------|---------|--------|
-| 1 | `path/to/file.py:42` | <short description of concern> | Fixed | <what was changed> |
-| 2 | `path/to/other.ts:17` | <short description of concern> | False positive | <why it doesn't apply> |
-| 3 | `path/to/api.go:88` | <short description of concern> | Skipped | <why it couldn't be fixed> |
+| 1 | `path/to/file:42` | <short description of concern> | Fixed | <what was changed> |
+| 2 | `path/to/other:17` | <short description of concern> | False positive | <why it doesn't apply> |
+| 3 | `path/to/handler:88` | <short description of concern> | Skipped | <why it couldn't be fixed> |
 
 **Result:** X fixed, Y false positives resolved, Z left open
 ```

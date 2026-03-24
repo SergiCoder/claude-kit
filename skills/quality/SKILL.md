@@ -51,7 +51,7 @@ Review **changed files** in the diff. For duplication checks, also search shared
 
 ### Verbose Patterns
 - [ ] Manual null/nil check chains replaceable with early returns or guard clauses
-- [ ] `try/except` / `if err != nil` for control flow that could use a conditional check instead
+- [ ] Error-handling constructs used for control flow that could use a conditional check instead
 - [ ] Conditionals with more than 3 boolean operators — extract to a named boolean or guard clause
 
 ### Size Thresholds
@@ -68,7 +68,7 @@ For each new function or class in the diff:
 1. Search by **exact name** across the repo (Grep for the symbol name)
 2. Search by **import**: check if the same module/package is already imported elsewhere with a similar function
 3. Check the language's **standard library** for the exact functionality
-4. Check **installed dependencies** (package.json / go.mod / requirements.txt) for the exact functionality
+4. Check **installed dependencies** (the project's dependency manifest) for the exact functionality
 
 Do NOT search by "purpose" or "pattern." Only flag duplicates you can find by name or import path. If you cannot find a concrete existing implementation, do not flag it.
 

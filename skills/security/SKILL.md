@@ -31,7 +31,7 @@ Trigger on any file change. Prioritize:
 - [ ] No raw SQL string interpolation — all queries via ORM or parameterized queries
 - [ ] User-supplied URLs (redirects, callbacks, webhooks) validated against an allow-list
 - [ ] File uploads validated: type, size, and filename sanitized
-- [ ] No `eval()`, `exec()`, `dangerouslySetInnerHTML`, shell injection, or template string injection
+- [ ] No `eval()`, `exec()`, unsafe HTML injection APIs, shell injection, or template string injection
 - [ ] All user input validated at system boundaries before use
 
 ### Configuration & Deployment
@@ -59,7 +59,7 @@ Trigger on any file change. Prioritize:
 - [ ] Logs do not contain passwords, tokens, or PII
 
 ### Dependencies
-- [ ] No known CVEs in dependencies (check with `pip-audit`, `pnpm audit`, `govulncheck`, etc.)
+- [ ] No known CVEs in dependencies (check with the language's dependency audit tool)
 - [ ] Dependencies pinned to exact versions in lock files
 
 ## Severity Definitions

@@ -52,7 +52,7 @@ Trigger when any source code changes. Skip when only documentation, config, or C
 - Use existing fixtures and helpers — never create new factories if one exists
 - Place tests in the correct location matching the project's convention
 - If a test file already exists for the module, add to it; if not, create one following the naming convention
-- Detect the test runner from project config (`package.json` test script, `pytest.ini`, `go.mod`, `Makefile` test target, etc.) — follow it rather than assuming a default
+- Detect the test runner from project config (dependency manifests, test config files, `Makefile` test target, etc.) — follow it rather than assuming a default
 
 ## Behavior
 

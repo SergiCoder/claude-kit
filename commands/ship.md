@@ -51,7 +51,7 @@ Scan changed and untracked files for:
 Only flag genuine issues. If issues found, list them and ask the user before proceeding.
 
 ### Step 3 — Auto-format (if applicable)
-Check if the project has a linter/formatter configured (look for config files: `.ruff.toml`, `pyproject.toml`, `.eslintrc*`, `biome.json`, `golangci.yml`, etc.).
+Check if the project has a linter/formatter configured (look for formatter/linter config files in the project root).
 
 If a formatter is found and there are changed files in the relevant language, run it before staging. Only run formatters that are clearly configured — do not guess.
 

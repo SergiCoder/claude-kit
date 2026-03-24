@@ -46,10 +46,8 @@ If empty, stop:
 ### Step 5 — Run relevant tests
 
 Look at the changed file paths and detect the test runner from project config:
-- `pyproject.toml` / `pytest.ini` / `setup.cfg` with pytest → `pytest -q` (or equivalent per project)
-- `package.json` with test script → `npm test` / `pnpm test` / `yarn test`
-- `go.mod` → `go test ./...`
-- `Makefile` with a `test` target → `make test`
+- Check dependency manifests, test config files, and `Makefile` for a test target
+- Use the project's configured test command
 
 Run only the test suites for areas that have changed files. Tell the user which suite you're running before running it. If tests fail, stop:
 > "Tests failed. Fix the failures before opening a PR."
@@ -79,7 +77,7 @@ Build the PR body:
 (tick the one matching the branch prefix)
 
 ## Testing
-<what was tested and result — e.g. "All tests pass via `pytest -q`">
+<what was tested and result — e.g. "All tests pass">
 
 ## Checklist
 - [ ] Code is self-reviewed

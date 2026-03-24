@@ -19,10 +19,10 @@ Trigger on source code changes. Focus by file type:
 ## Rules
 
 ### Database Queries
-- [ ] No N+1: related objects accessed in loops must use eager loading (ORM joins, `select_related`, `preload`, etc.)
-- [ ] No Python/application-side filtering of result sets — push WHERE clauses to the database
+- [ ] No N+1: related objects accessed in loops must use eager loading (ORM joins, prefetching, or equivalent)
+- [ ] No application-side filtering of result sets — push WHERE clauses to the database
 - [ ] No materializing large result sets into memory for IN clauses — use subqueries
-- [ ] Use existence checks (`.exists()`, `EXISTS(...)`) over fetching a full record
+- [ ] Use existence checks (ORM existence method or `EXISTS` subquery) over fetching a full record
 - [ ] Use `COUNT(*)` at DB level rather than fetching all rows to count them
 - [ ] Bulk operations for batch inserts/updates — not one query per record in a loop
 - [ ] No unbounded queries on list endpoints — paginate or limit
@@ -57,7 +57,7 @@ Trigger on source code changes. Focus by file type:
 - [ ] Webhook / event handlers return quickly — heavy processing in background
 
 ### Migrations
-- [ ] Large-table ALTER operations avoid exclusive locks (use `CONCURRENTLY` for indexes in PostgreSQL)
+- [ ] Large-table ALTER operations avoid exclusive locks (use concurrent index creation or equivalent for the database engine)
 - [ ] No full-table data updates in migrations — batch them
 - [ ] Schema migrations separate from data migrations
 
