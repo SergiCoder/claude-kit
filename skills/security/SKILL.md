@@ -26,6 +26,8 @@ Trigger on any file change. Prioritize:
 - [ ] Permission checks exist on every mutating endpoint
 - [ ] Role escalation guarded: users cannot self-promote
 - [ ] Session cookies: `HttpOnly`, `Secure`, `SameSite` flags set in production
+- [ ] Passwords hashed with a strong adaptive algorithm (bcrypt, scrypt, argon2) — not MD5/SHA
+- [ ] Multi-tenant endpoints enforce tenant isolation — users cannot access other tenants' resources by changing an ID
 
 ### Input Validation & Injection
 - [ ] No raw SQL string interpolation — all queries via ORM or parameterized queries
@@ -33,6 +35,8 @@ Trigger on any file change. Prioritize:
 - [ ] File uploads validated: type, size, and filename sanitized
 - [ ] No `eval()`, `exec()`, unsafe HTML injection APIs, shell injection, or template string injection
 - [ ] All user input validated at system boundaries before use
+- [ ] Path traversal prevented — user-supplied filenames cannot escape the intended directory
+- [ ] Deserialization of untrusted data uses safe parsers — no arbitrary object instantiation
 
 ### Configuration & Deployment
 - [ ] Secrets have no default values — app crashes if env var missing
@@ -41,6 +45,8 @@ Trigger on any file change. Prioritize:
 - [ ] Docker images run as non-root user
 - [ ] Dev-only routes/scripts (seed data, admin creation) guarded by environment check
 - [ ] No secret files (`.env.prod`, credentials) committed to git
+- [ ] TLS enforced for all external connections (database, APIs, message queues)
+- [ ] Containers use minimal base images with no unnecessary tools installed
 
 ### Security Headers (web applications)
 - [ ] `Content-Security-Policy` set on endpoints serving HTML
@@ -57,6 +63,17 @@ Trigger on any file change. Prioritize:
 - [ ] Responses do not expose internal IDs or implementation details unnecessarily
 - [ ] Error responses in production do not include stack traces or internal paths
 - [ ] Logs do not contain passwords, tokens, or PII
+- [ ] Sensitive data at rest encrypted (PII, payment data, health records)
+- [ ] Audit trail exists for access to sensitive resources
+
+### Cryptography
+- [ ] No deprecated algorithms (MD5, SHA1, DES, RC4) for security purposes
+- [ ] Random values for tokens/secrets use cryptographically secure generators — not general-purpose random
+
+### API Security
+- [ ] Mass assignment prevented — only explicitly permitted fields accepted for create/update
+- [ ] Pagination enforced — no unbounded list endpoints returning all records
+- [ ] Idempotency keys or guards on mutation endpoints to prevent replay
 
 ### Dependencies
 - [ ] No known CVEs in dependencies (check with the language's dependency audit tool)
