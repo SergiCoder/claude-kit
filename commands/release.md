@@ -1,5 +1,5 @@
 ---
-allowed-tools: Bash(git fetch*), Bash(git checkout*), Bash(git pull*), Bash(git log*), Bash(git diff*), Bash(git status*), Bash(git branch*), Bash(gh pr list*), Bash(gh pr view*), Bash(gh pr create*), Read
+allowed-tools: Bash(git fetch*), Bash(git checkout*), Bash(git pull*), Bash(git log*), Bash(git diff*), Bash(git status*), Bash(git branch*), Bash(git add *), Bash(git commit*), Bash(git push*), Bash(gh pr list*), Bash(gh pr view*), Bash(gh pr create*), Read, Edit, Grep, Glob
 description: Open a release PR from dev into main for production deploy
 ---
 
@@ -86,6 +86,56 @@ Merging `dev` into `main` for production deployment.
 
 ```bash
 git checkout -
+```
+
+### Step 6 — Suggest version bump
+
+1. **Find the current version.** Search the project root for files containing a version field (look for `"version"` keys or `version =` patterns). Read the first match and extract the current semver value.
+
+2. **Determine bump type** from the commits in Step 3:
+   - Any commit message body or footer contains `BREAKING CHANGE` → **major**
+   - Any commit type is `feat` → **minor**
+   - Otherwise (all `fix`, `chore`, `docs`, `refactor`, etc.) → **patch**
+
+3. **Compute the suggested next version** by incrementing the appropriate semver component (reset lower components to 0).
+
+4. **Present the suggestion** — do not apply it automatically:
+   > "Suggested version bump: `<current>` → `<suggested>` (based on N feat / M fix / K other commits). Apply? [y/n]"
+
+5. If the user accepts, apply the version change to the file where it was found.
+
+### Step 7 — Update changelog
+
+1. **Check if a changelog file exists** (look for `CHANGELOG.md`, `CHANGELOG`, or similar in the project root). If none exists, skip this step.
+
+2. **Group the commits from Step 3** by conventional commit type into sections:
+   - `feat` → **Added**
+   - `fix` → **Fixed**
+   - `refactor` → **Changed**
+   - `perf` → **Performance**
+   - `docs` → **Documentation**
+   - `chore`, `ci`, `build`, `style`, `test` → **Maintenance**
+
+   Omit empty sections. Use the commit summary as the entry text. Include the scope if present.
+
+3. **Add a new entry** at the top of the changelog (below any header) using the version from Step 6 and today's date:
+   ```markdown
+   ## [<version>] - YYYY-MM-DD
+
+   ### Added
+   - <feat commit summaries>
+
+   ### Fixed
+   - <fix commit summaries>
+   ```
+
+4. **Show the changelog entry** to the user for confirmation before writing it.
+
+### Step 8 — Commit and push
+
+If any changes were made (version bump, changelog), commit them to `dev` and push before the PR is merged:
+```
+chore: bump version to <version> and update changelog
 ```
 
 ### Final output
