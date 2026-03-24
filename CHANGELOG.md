@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-03-24
+
+### Added
+- `dependencies` skill — audits project dependencies for outdated packages across npm, pip, Go modules, Bundler, Composer, Maven, and NuGet. Reports findings bucketed by severity: CRITICAL (known CVE), HIGH (2+ major versions behind), MEDIUM (1 major behind), LOW (minor/patch behind). Auto-triggered when manifest files change in a PR.
+
 ## [1.3.0] - 2026-03-24
 
 ### Added

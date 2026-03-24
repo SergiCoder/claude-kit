@@ -93,6 +93,7 @@ Build the list of stack skills to run: one per detected language + one per detec
 | Any `*.svelte` | stack-typescript |
 | `Dockerfile*`, `docker-compose*`, `infra/**`, `.github/workflows/**` | security only |
 | `.env*` (committed only) | security only |
+| `package.json`, `pyproject.toml`, `requirements*.txt`, `go.mod`, `Gemfile`, `composer.json`, `*.csproj`, `pom.xml`, `build.gradle`, `build.gradle.kts` changed | dependencies |
 
 Deduplicate. Always include `quality` if any source code changed. Always include `documentation` if any source code changed.
 
@@ -106,6 +107,7 @@ Each profile ONLY reports findings within its domain. If a finding could belong 
 4. **performance**: Query patterns, caching, async correctness, indexes, frontend rendering
 5. **documentation**: Doc accuracy, staleness, completeness
 6. **testing**: Test coverage gaps
+7. **dependencies**: Outdated packages, frameworks, and runtimes
 
 ### Step 4 — Run reviews in parallel
 
