@@ -179,7 +179,7 @@ Wait for all agents to complete, then present:
 ---
 
 ## Critical & High Findings
-(All critical/high across profiles, grouped by file. Deduplicate — keep most detailed, note both profiles.)
+(All critical/high across reporting profiles, grouped by file. Deduplicate — keep most detailed, note both profiles.)
 
 ## Medium Findings
 (Same format)
@@ -187,18 +187,20 @@ Wait for all agents to complete, then present:
 ## Low Findings
 (Same format)
 
-## Documentation Fixes Applied
-(If documentation profile ran)
-
 ## Tests Written
-(If testing profile ran)
+(If testing profile ran — list tests added, not severity counts)
+
+## Documentation Fixes Applied
+(If documentation profile ran — list files updated, not severity counts)
 
 ## Summary
 
 | Profile | Critical | High | Medium | Low |
 |---|---|---|---|---|
 | security | X | X | X | X |
-| **Total (deduplicated)** | **X** | **X** | **X** | **X** |
+| **Total** | **X** | **X** | **X** | **X** |
+
+**Do NOT include testing or documentation in the summary table.** They are writing profiles — they write code and docs directly, not report findings by severity. Show their results only in the "Tests Written" and "Documentation Fixes Applied" sections above.
 ```
 
 ### Step 6 — Fix mode (optional)
@@ -220,6 +222,8 @@ If no fix flag is present, do not modify any files.
 ```
 Review complete: X critical, Y high, Z medium, W low findings across N profiles.
 ```
+
+The finding counts and profile count exclude writing profiles (testing, documentation). Those profiles report what they wrote, not findings.
 
 - Critical findings: "CRITICAL findings must be resolved before opening a PR."
 - High or below only: "HIGH findings should be resolved before merge. Run `/prism:review --fix` to address them."
