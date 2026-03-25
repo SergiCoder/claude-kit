@@ -44,7 +44,8 @@ Trigger when any source code changes. Skip when only documentation, config, or C
 2. Identify every new or changed function, class, endpoint, and code path in source files
 3. Search for existing test files following the project's naming convention (co-located, dedicated test directory, suffix-based, etc.)
 4. Read existing test files to learn the project's testing style, fixtures, and helpers
-5. Write missing tests directly using Edit or Write tool — following existing conventions exactly
+5. **Run coverage on changed files** — detect the coverage tool from project config and run it scoped to the changed source files. Use the coverage report to identify uncovered lines and branches in the diff. Prioritize writing tests for uncovered code paths over heuristic analysis alone. If no coverage tool is available, fall back to heuristic analysis only.
+6. Write missing tests directly using Edit or Write tool — following existing conventions exactly
 
 ## Writing Conventions
 
@@ -57,10 +58,12 @@ Trigger when any source code changes. Skip when only documentation, config, or C
 ## Behavior
 
 1. Analyze the diff and identify all untested new/changed code
-2. Read existing tests and fixtures to understand the project's testing style
-3. Write missing tests directly
-4. Run the tests to verify they pass (if a test runner is detectable)
-5. Provide a summary
+2. Run coverage scoped to changed files to find uncovered lines and branches (if a coverage tool is detectable)
+3. Read existing tests and fixtures to understand the project's testing style
+4. Write missing tests — prioritize uncovered lines from the coverage report
+5. Run the tests to verify they pass (if a test runner is detectable)
+6. Re-run coverage to confirm improvement
+7. Provide a summary
 
 ## Output Format
 
@@ -75,6 +78,9 @@ Trigger when any source code changes. Skip when only documentation, config, or C
 
 ### Already covered
 - (code that was already tested)
+
+### Coverage
+- (before/after coverage for changed files, if a coverage tool was available)
 
 ### Test run results
 - (pass/fail summary if tests were executed)
