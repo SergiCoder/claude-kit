@@ -1,6 +1,6 @@
 {
   "name": "prism",
-  "description": "Multi-profile code review, conventional commits, branching, and PR workflow for any repo. Runs security, quality, stack, performance, documentation, and testing reviewers in parallel.",
+  "description": "A Claude Code plugin that adds multi-profile code review, conventional commits, branching, and PR workflows to any repo. It auto-detects your stack and runs security, quality, performance, documentation, and testing reviewers in parallel. Works both locally via slash commands and as an automated CI reviewer on pull requests.",
   "version": "1.4.0",
   "author": {
     "name": "SergiCoder",

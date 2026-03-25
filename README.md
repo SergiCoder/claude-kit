@@ -1,6 +1,6 @@
 # prism
 
-Multi-profile code review, conventional commits, branching, and PR workflow — packaged as a Claude Code plugin for any repo.
+A Claude Code plugin that adds multi-profile code review, conventional commits, branching, and PR workflows to any repo. It auto-detects your stack and runs security, quality, performance, documentation, and testing reviewers in parallel. Works both locally via slash commands and as an automated CI reviewer on pull requests.
 
 ## Setup
 
