@@ -1,5 +1,5 @@
 ---
-allowed-tools: Bash(git fetch*), Bash(git checkout*), Bash(git pull*), Bash(git log*), Bash(git diff*), Bash(git status*), Bash(git branch*), Bash(git add *), Bash(git commit*), Bash(git push*), Bash(gh pr list*), Bash(gh pr view*), Bash(gh pr create*), Read, Edit, Grep, Glob
+allowed-tools: Bash(git fetch*), Bash(git checkout*), Bash(git pull*), Bash(git log*), Bash(git diff*), Bash(git status*), Bash(git branch*), Bash(git add *), Bash(git commit*), Bash(git push*), Bash(git tag*), Bash(gh pr list*), Bash(gh pr view*), Bash(gh pr create*), Read, Edit, Grep, Glob
 description: Open a release PR from dev into main for production deploy
 ---
 
@@ -138,9 +138,19 @@ If any changes were made (version bump, changelog), commit them to `dev` and pus
 chore: bump version to <version> and update changelog
 ```
 
+### Step 9 — Tag the release
+
+After committing and pushing, create an annotated git tag for the new version and push it:
+
+```bash
+git tag -a v<version> -m "v<version>"
+git push origin v<version>
+```
+
 ### Final output
 
 ```
 Release PR opened: <url>
 Includes N commits from dev → main.
+Tagged: v<version>
 ```
