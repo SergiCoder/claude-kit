@@ -10,8 +10,6 @@ A Claude Code plugin that adds multi-profile code review, conventional commits, 
 /plugin install SergiCoder/prism
 ```
 
-This gives you all the local slash commands (`/prism:review`, `/prism:ship`, etc.).
-
 ### 2. Add automated PR reviews (optional)
 
 ```bash
@@ -24,16 +22,39 @@ Then add your Anthropic API key as a repository secret:
 
 The workflow runs automatically on PRs opened by the repo owner, `@prism review` comments, and manual dispatch.
 
+## Examples
+
+```bash
+# create a branch with the right prefix and base
+/prism:create-branch feature user-avatars
+
+# lint, format, conventional commit, and push in one step
+/prism:ship
+
+# run all relevant reviewers in parallel (auto-detects your stack)
+/prism:review
+
+# sync with base branch, run tests, and open a pull request
+/prism:open-pr
+
+# read inline PR comments, fix the code, reply, and resolve
+/prism:address-review
+
+# open a release PR from dev into main
+/prism:release
+```
+
 ## Commands
 
 | Command | Description |
 |---|---|
+| `/prism:install-ci-review` | Install the automated PR review workflow into the current project |
 | `/prism:create-branch <type> <name>` | Create a `feature/`, `fix/`, or `hotfix/` branch from the correct base |
 | `/prism:ship` | Pre-ship hygiene check, auto-format, conventional commits, push |
 | `/prism:review [profiles] [--fix\|--fix-medium\|--fix-all]` | Run multi-profile code review in parallel |
 | `/prism:open-pr` | Sync base branch, run tests, open a PR |
+| `/prism:address-review` | Address inline PR review comments — validate, fix, reply, and resolve |
 | `/prism:release` | Open a release PR from `dev` into `main` (for repos using a dev branch) |
-| `/prism:install-ci-review` | Install the automated PR review workflow into the current project |
 
 ## Code Review
 
@@ -42,7 +63,7 @@ The workflow runs automatically on PRs opened by the repo owner, `@prism review`
 ```bash
 /prism:review                        # auto-detect stack and profiles
 /prism:review security,performance   # specific profiles only
-/prism:review --fix                  # review + interactively fix CRITICAL and HIGH
+/prism:review --fix                  # review + fix CRITICAL and HIGH
 /prism:review --fix-medium           # review + fix CRITICAL, HIGH, and MEDIUM
 /prism:review --fix-all              # review + fix all severities
 ```
