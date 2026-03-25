@@ -1,5 +1,5 @@
 ---
-allowed-tools: Bash(git diff*), Bash(git status*), Bash(git ls-files*), Bash(git branch*), Bash(git remote*), Bash(git add*), Bash(git commit*), Bash(git push*), Bash(git restore --staged*), Bash(test -f .git/MERGE_HEAD*), Bash(gh pr view*), Bash(gh api *), Read, Glob, Grep
+allowed-tools: Bash(git diff*), Bash(git status*), Bash(git ls-files*), Bash(git branch*), Bash(git remote*), Bash(git add*), Bash(git commit*), Bash(git push*), Bash(git restore --staged*), Bash(test -f .git/MERGE_HEAD*), Bash(gh pr view*), Bash(gh api *), Bash(npx tsc*), Bash(npx vue-tsc*), Bash(mypy *), Bash(pyright *), Bash(go vet *), Read, Glob, Grep
 description: Pre-ship hygiene check, conventional commit, and push
 ---
 Analyze the current git repository state and create well-structured conventional commits, then push.
@@ -55,7 +55,24 @@ Check if the project has a linter/formatter configured (look for formatter/linte
 
 If a formatter is found and there are changed files in the relevant language, run it before staging. Only run formatters that are clearly configured — do not guess.
 
-### Step 4 — Commit staged changes
+### Step 4 — Type check (if applicable)
+
+Check if the project has a type checker configured:
+
+| Signal | Command |
+|---|---|
+| `tsconfig.json` exists | `npx tsc --noEmit` |
+| `tsconfig.json` + `package.json` deps contain `"vue-tsc"` | `npx vue-tsc --noEmit` |
+| `pyproject.toml` contains `mypy` or `[tool.mypy]` | `mypy .` |
+| `pyproject.toml` contains `pyright` or `pyrightconfig.json` exists | `pyright` |
+| `go.mod` exists | `go vet ./...` |
+
+Only run type checkers that are clearly configured — do not guess. If the type checker reports errors, stop and show them to the user:
+> "Type errors found. Fix them before shipping."
+
+If no type checker is configured, skip this step silently.
+
+### Step 5 — Commit staged changes
 If there are staged changes:
 1. **Group by single purpose.** If staged changes span multiple logical units, split them.
 2. **Write a Conventional Commit message:**
@@ -70,19 +87,19 @@ If there are staged changes:
 
 3. Commit: `git commit -m "<message>"`
 
-### Step 5 — Commit unstaged/untracked changes
+### Step 6 — Commit unstaged/untracked changes
 Group by single purpose, stage explicitly by file name (never `git add .` or `git add -A`), write a Conventional Commit message, commit.
 
 Skip: `.env*` files, build artifacts, auto-generated files, secrets.
 
-### Step 6 — Push
+### Step 7 — Push
 ```bash
 git push
 # or if no upstream:
 git push -u origin <branch-name>
 ```
 
-### Step 7 — Resolve inline review comments
+### Step 8 — Resolve inline review comments
 After pushing, check if there is an open PR for the current branch:
 ```bash
 gh pr view --json number,url 2>/dev/null
