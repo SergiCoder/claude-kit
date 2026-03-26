@@ -55,6 +55,8 @@ Check if the project has a linter/formatter configured (look for formatter/linte
 
 If a formatter is found and there are changed files in the relevant language, run it before staging. Only run formatters that are clearly configured — do not guess.
 
+After formatting, re-stage any files that were already staged and got reformatted (`git add <file>` for each). This ensures formatting changes are included in the commit.
+
 ### Step 4 — Type check (if applicable)
 
 Check if the project has a type checker configured:
