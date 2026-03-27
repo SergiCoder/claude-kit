@@ -82,6 +82,7 @@ Build the list of stack skills to run: one per detected language + one per detec
 | Condition | Profiles to run |
 |---|---|
 | Any source code changed | quality + security + performance + testing + all detected stack skills |
+| Any backend framework detected (django, flask, fastapi, express, spring, laravel, rails, aspnet, go-http) | rest-api |
 | Any `*.py` | stack-python + any detected Python framework skill |
 | Any `*.ts`, `*.tsx`, `*.js`, `*.jsx` | stack-typescript + any detected JS framework skill |
 | Any `*.go` | stack-go + stack-go-http (if detected) |
@@ -103,11 +104,12 @@ Each profile ONLY reports findings within its domain. If a finding could belong 
 
 1. **quality**: DRY violations, dead code, complexity, stdlib reinvention, over-abstraction, size thresholds
 2. **stack-***: Language idioms, type safety, error handling conventions, framework-specific patterns
-3. **security**: Authentication, authorization, injection, secrets, headers, rate limiting
-4. **performance**: Query patterns, caching, async correctness, indexes, frontend rendering
-5. **documentation**: Doc accuracy, staleness, completeness
-6. **testing**: Test coverage gaps
-7. **dependencies**: Outdated packages, frameworks, and runtimes
+3. **rest-api**: HTTP status codes, Location headers, error envelopes, resource representation, URL design, method semantics
+4. **security**: Authentication, authorization, injection, secrets, headers, rate limiting
+5. **performance**: Query patterns, caching, async correctness, indexes, frontend rendering
+6. **documentation**: Doc accuracy, staleness, completeness
+7. **testing**: Test coverage gaps
+8. **dependencies**: Outdated packages, frameworks, and runtimes
 
 ### Step 4 — Run reviews in parallel
 

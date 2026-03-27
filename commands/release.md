@@ -20,12 +20,13 @@ Open a pull request from `dev` into `main` for a production release.
    If there are uncommitted changes, stop:
    > "Working tree is not clean. Commit or stash your changes first, then re-run /release."
 
-2. Verify `dev` branch exists:
+2. Verify `dev` branch exists on the remote (after fetching):
    ```bash
-   git branch -r | grep origin/dev
+   git fetch origin
+   git ls-remote --exit-code --heads origin dev
    ```
-   If not found, stop:
-   > "No `dev` branch found. This project may use a single-branch workflow — open a PR manually."
+   If the command fails (exit code non-zero), stop:
+   > "No `dev` branch found on the remote. This project may use a single-branch workflow — open a PR manually."
 
 3. Check for open PRs targeting `dev` that haven't been merged:
    ```bash
@@ -39,7 +40,12 @@ Open a pull request from `dev` into `main` for a production release.
 
 ```bash
 git fetch origin
-git checkout dev && git pull origin dev
+```
+
+If not already on `dev`, switch to it — creating a local tracking branch if needed:
+```bash
+git checkout dev 2>/dev/null || git checkout -b dev --track origin/dev
+git pull origin dev
 ```
 
 If the pull fails, stop and report the error.

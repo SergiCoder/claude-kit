@@ -75,6 +75,7 @@ The workflow runs automatically on PRs opened by the repo owner, `@prism review`
 | `security` | Auth, injection, secrets, headers, rate limiting, data exposure |
 | `quality` | Dead code, duplication, stdlib/dependency reinvention, verbose patterns, size thresholds |
 | `performance` | N+1 queries, indexes, async correctness, caching, frontend rendering |
+| `rest-api` | HTTP status codes, Location headers, error envelopes, resource representation, URL design |
 | `documentation` | Fixes docs directly — CLAUDE.md, README, docstrings, inline comments |
 | `testing` | Writes missing tests directly — happy path, error cases, edge cases |
 
@@ -130,6 +131,7 @@ prism/
     ├── security/SKILL.md
     ├── quality/SKILL.md
     ├── performance/SKILL.md
+    ├── rest-api/SKILL.md
     ├── documentation/SKILL.md
     ├── testing/SKILL.md
     ├── stack-python/SKILL.md
