@@ -22,49 +22,65 @@ Manifest files to check:
 
 ## Detection Commands
 
-Run only the commands relevant to the manifest files that exist in the project root:
+Run only the commands relevant to the manifest files that exist in the project root. **You MUST run these commands and base findings on their actual output. Never skip a command or infer versions from your training data.**
 
 **Node.js:**
 ```bash
-npm outdated --json 2>/dev/null
+npm outdated --json
 ```
-If `yarn.lock` exists instead: `yarn outdated --json 2>/dev/null`
-If `pnpm-lock.yaml` exists instead: `pnpm outdated --format json 2>/dev/null`
+If `yarn.lock` exists instead: `yarn outdated --json`
+If `pnpm-lock.yaml` exists instead: `pnpm outdated --format json`
+
+Also run security audit:
+```bash
+npm audit --json
+```
+(or `yarn audit --json` / `pnpm audit --json` for the matching lock file)
 
 **Python:**
 ```bash
-pip list --outdated --format=json 2>/dev/null
+pip list --outdated --format=json
 ```
+If `pip-audit` is available: `pip-audit --format=json`
 
 **Go:**
 ```bash
-go list -u -m all 2>/dev/null
+go list -u -m all
 ```
 Outdated modules have `[vX.Y.Z]` appended to their line (the available upgrade version).
 
 **Ruby:**
 ```bash
-bundle outdated --parseable 2>/dev/null
+bundle outdated --parseable
 ```
 
 **PHP:**
 ```bash
-composer outdated --format=json 2>/dev/null
+composer outdated --format=json
 ```
 
 **Java/Maven:**
 ```bash
-mvn versions:display-dependency-updates -q 2>/dev/null | grep "\->"
+mvn versions:display-dependency-updates -q | grep "\->"
 ```
 
 **.NET:**
 ```bash
-dotnet list package --outdated 2>/dev/null
+dotnet list package --outdated
 ```
 
-## Fallback (CLI Unavailable)
+### Handling command failures
 
-If a package manager CLI is not installed or the command fails, read the manifest file directly and report pinned versions that are clearly behind well-known major version milestones (e.g., `react` pinned to `^17` when v19 is current, `django` pinned to `3.x` when 5.x is current). Mark these findings as `(unverified — CLI unavailable)`.
+If a command fails or the CLI is not installed:
+1. **Show the error output** — do not suppress it.
+2. **Report the failure explicitly** as a finding with severity **HIGH**:
+   ```
+   ### [HIGH] CLI unavailable: <package-manager>
+   **Error:** <actual error message>
+   **Impact:** Cannot verify whether dependencies are up to date.
+   **Fix:** Install <package-manager> and re-run the review.
+   ```
+3. **Do NOT fall back to guessing versions from training data.** If you cannot run the CLI, you cannot verify — report that fact and move on.
 
 ## Framework & Runtime Checks
 
@@ -95,52 +111,54 @@ Report the primary framework as its own finding, clearly labelled **[FRAMEWORK]*
 
 ### Step 2 — Check the runtime version
 
-Detect the runtime in use and check it against the current stable release:
+Detect the installed runtime version, then look up the latest stable release to compare.
 
 **Node.js:**
 ```bash
-node --version 2>/dev/null
+node --version
 ```
-Check against: current LTS stable (e.g., v22.x as of early 2026). Flag if the major version is behind the current LTS.
+Look up the current LTS version:
+```bash
+npm view node version
+```
+Also read `.nvmrc`, `.node-version`, or `.tool-versions` for the pinned version.
 
 **Python:**
 ```bash
-python --version 2>/dev/null || python3 --version 2>/dev/null
+python --version || python3 --version
 ```
 Also read `.python-version`, `pyproject.toml` `[tool.python]`, or `.tool-versions` for the pinned version.
-Check against: current stable (e.g., 3.14.x as of early 2026).
+Look up the latest stable: `pip index versions python 2>/dev/null` or check the `python` package metadata if available.
 
 **Go:**
 ```bash
-go version 2>/dev/null
+go version
 ```
 Also read the `go` directive in `go.mod`.
-Check against: current stable (e.g., 1.24.x as of early 2026).
+Look up available versions: `go list -m -versions golang.org/toolchain 2>/dev/null`
 
 **Ruby:**
 ```bash
-ruby --version 2>/dev/null
+ruby --version
 ```
 Also read `.ruby-version` or `.tool-versions`.
-Check against: current stable (e.g., 3.4.x as of early 2026).
 
 **PHP:**
 ```bash
-php --version 2>/dev/null
+php --version
 ```
-Check against: current stable (e.g., 8.4.x as of early 2026).
 
 **Java:**
 ```bash
-java --version 2>/dev/null
+java --version
 ```
-Check against: current LTS (e.g., Java 21 or 25 as of early 2026).
 
 **.NET:**
 ```bash
-dotnet --version 2>/dev/null
+dotnet --version
 ```
-Check against: current stable (e.g., .NET 9 as of early 2026).
+
+For runtimes where a programmatic latest-version lookup is not available, use the outdated-package CLI output as the source of truth (e.g., `npm outdated` reports the Node.js engine constraint). If you still cannot determine the latest stable version from CLI output, **skip the runtime finding** rather than guessing from training data.
 
 Report each runtime as its own finding, labelled **[RUNTIME]**, before package findings. Apply severity:
 - **HIGH**: Runtime major version is end-of-life (EOL) or 2+ major versions behind current stable
@@ -148,6 +166,15 @@ Report each runtime as its own finding, labelled **[RUNTIME]**, before package f
 - **LOW**: Runtime is current major but a minor/patch behind
 
 ## Rules
+
+### Evidence requirement
+
+Every finding MUST be backed by actual CLI output. Before reporting any package as outdated:
+1. Confirm the CLI command ran successfully (non-empty output, no error).
+2. Quote the specific CLI output line that shows the installed vs. latest version.
+3. If the CLI did not run or produced an error, report the CLI failure — not guessed findings.
+
+**Never infer a package is outdated based on your training data alone.** Your knowledge of "current versions" is stale. The CLI output is the single source of truth.
 
 ### Severity Classification
 

@@ -1,5 +1,5 @@
 ---
-allowed-tools: Bash(git diff*), Bash(git log*), Bash(git branch*), Bash(git status*), Bash(cat*), Bash(grep*), Read, Edit, Write, Glob, Grep, Agent
+allowed-tools: Bash(git diff*), Bash(git log*), Bash(git branch*), Bash(git status*), Bash(cat*), Bash(grep*), Bash(npm outdated*), Bash(npm audit*), Bash(npm view*), Bash(yarn outdated*), Bash(yarn audit*), Bash(pnpm outdated*), Bash(pnpm audit*), Bash(pip list*), Bash(pip-audit*), Bash(pip index*), Bash(go list*), Bash(go version*), Bash(bundle outdated*), Bash(composer outdated*), Bash(mvn versions*), Bash(dotnet list*), Bash(node --version*), Bash(python --version*), Bash(python3 --version*), Bash(ruby --version*), Bash(php --version*), Bash(java --version*), Bash(dotnet --version*), Read, Edit, Write, Glob, Grep, Agent
 description: Run multi-profile code review on the current branch
 ---
 
