@@ -31,14 +31,20 @@ The workflow runs automatically on PRs opened by the repo owner, `@prism review`
 # lint, format, conventional commit, and push in one step
 /prism:ship
 
-# run all relevant reviewers in parallel (auto-detects your stack)
-/prism:review
+# report-only review (auto-detects your stack)
+/prism:review-and-report-only
+
+# review and auto-fix all findings
+/prism:review-and-fix
+
+# review and post inline comments on the PR
+/prism:review-pr
 
 # sync with base branch, run tests, and open a pull request
 /prism:open-pr
 
 # read inline PR comments, fix the code, reply, and resolve
-/prism:address-review
+/prism:address-pr-review
 
 # open a release PR from dev into main
 /prism:release
@@ -51,21 +57,22 @@ The workflow runs automatically on PRs opened by the repo owner, `@prism review`
 | `/prism:install-ci-review` | Install the automated PR review workflow into the current project |
 | `/prism:create-branch <type> <name>` | Create a `feature/`, `fix/`, or `hotfix/` branch from the correct base |
 | `/prism:ship` | Pre-ship hygiene check, auto-format, conventional commits, push |
-| `/prism:review [profiles] [--fix\|--fix-medium\|--fix-all]` | Run multi-profile code review in parallel |
+| `/prism:review-and-report-only [profiles]` | Run multi-profile code review — report only, no changes |
+| `/prism:review-and-fix [profiles]` | Run multi-profile code review and auto-fix all findings |
+| `/prism:review-pr [profiles]` | Review and post inline comments + summary on the PR |
 | `/prism:open-pr` | Sync base branch, run tests, open a PR |
-| `/prism:address-review` | Address inline PR review comments — validate, fix, reply, and resolve |
+| `/prism:address-pr-review` | Address inline PR review comments — validate, fix, reply, and resolve |
 | `/prism:release` | Open a release PR from `dev` into `main` (for repos using a dev branch) |
 
 ## Code Review
 
-`/prism:review` auto-detects the stack from config files and runs only the relevant reviewers. The same profiles run locally and in CI.
+All review commands auto-detect the stack from config files and run only the relevant reviewers. The same profiles run locally and in CI.
 
 ```bash
-/prism:review                        # auto-detect stack and profiles
-/prism:review security,performance   # specific profiles only
-/prism:review --fix                  # review + fix CRITICAL and HIGH
-/prism:review --fix-medium           # review + fix CRITICAL, HIGH, and MEDIUM
-/prism:review --fix-all              # review + fix all severities
+/prism:review-and-report-only                    # report findings locally
+/prism:review-and-report-only security,performance  # specific profiles only
+/prism:review-and-fix                            # review + auto-fix all severities
+/prism:review-pr                                 # post inline comments on the PR
 ```
 
 ### Core Profiles
@@ -123,8 +130,11 @@ prism/
 ├── commands/                    # user-invoked slash commands
 │   ├── create-branch.md
 │   ├── ship.md
-│   ├── review.md
+│   ├── review-and-report-only.md
+│   ├── review-and-fix.md
+│   ├── review-pr.md
 │   ├── open-pr.md
+│   ├── address-pr-review.md
 │   ├── release.md
 │   └── install-ci-review.md
 └── skills/                      # review profiles (used locally and in CI)

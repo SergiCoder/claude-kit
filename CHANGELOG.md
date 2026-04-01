@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0] - 2026-04-01
+
+### Added
+- `review-pr` command — reviews code and posts inline comments + summary comment directly on the PR
+- `review-and-fix` command — reviews code and auto-fixes all findings (all severities, no flags needed)
+- Dependencies skill now upgrades outdated packages automatically instead of just reporting them
+- Security audit commands (`npm audit`, `pip-audit`) added to dependency detection
+
+### Changed
+- `review` renamed to `review-and-report-only` — report-only, no fix flags
+- `address-review` renamed to `address-pr-review` for consistency with `review-pr`
+- Removed `--fix`, `--fix-medium`, `--fix-all` flags from review (fixing is now a separate command)
+- Dependencies skill requires CLI output as evidence — no more guessing versions from training data
+- Removed silent error suppression (`2>/dev/null`) from all dependency detection commands
+- CI review workflow template now references `review-pr` command
+
+### Fixed
+- Dependency detection commands were blocked by `review` command's `allowed-tools` — all package manager CLIs now whitelisted
+
 ## [1.8.0] - 2026-03-27
 
 ### Added

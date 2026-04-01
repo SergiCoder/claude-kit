@@ -7,7 +7,7 @@ Review code changes on the current branch using specialized reviewer profiles.
 
 ## Arguments
 
-- `$ARGUMENTS` — optional: comma-separated profile names (e.g., `security,performance`) or `--fix` flag
+- `$ARGUMENTS` — optional: comma-separated profile names (e.g., `security,performance`)
 
 If no profiles specified, auto-detect from changed files.
 
@@ -205,20 +205,6 @@ Wait for all agents to complete, then present:
 **Do NOT include testing or documentation in the summary table.** They are writing profiles — they write code and docs directly, not report findings by severity. Show their results only in the "Tests Written" and "Documentation Fixes Applied" sections above.
 ```
 
-### Step 6 — Fix mode (optional)
-
-Determine which severities to fix based on the flag in `$ARGUMENTS`:
-
-| Flag | Severities fixed |
-|---|---|
-| `--fix` | CRITICAL, HIGH |
-| `--fix-medium` | CRITICAL, HIGH, MEDIUM |
-| `--fix-all` | CRITICAL, HIGH, MEDIUM, LOW |
-
-If any fix flag is present: for each finding in the applicable severities, ask "Fix this? [y/n/skip all]", apply with the Edit tool if yes, then re-run the relevant profile's checks on the fixed file to verify.
-
-If no fix flag is present, do not modify any files.
-
 ### Final output
 
 ```
@@ -228,5 +214,5 @@ Review complete: X critical, Y high, Z medium, W low findings across N profiles.
 The finding counts and profile count exclude writing profiles (testing, documentation). Those profiles report what they wrote, not findings.
 
 - Critical findings: "CRITICAL findings must be resolved before opening a PR."
-- High or below only: "HIGH findings should be resolved before merge. Run `/prism:review --fix` to address them."
+- High or below only: "HIGH findings should be resolved before merge. Run `/prism:review-and-fix` to fix them automatically."
 - Clean: "No critical or high findings. Ready for PR."

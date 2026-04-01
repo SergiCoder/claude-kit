@@ -59,7 +59,7 @@ jobs:
           claude_args: --model claude-opus-4-6 --max-turns 30 --allowedTools "Bash(git diff*),Bash(git log*),Bash(git show*),Bash(gh api*),Read,Glob,Grep,mcp__github__*,mcp__github_inline_comment__*"
           prompt: |
             Review the changes in this pull request using the review profiles in `.prism/skills/`.
-            Follow the detection rules defined in `.prism/commands/review.md`, but replace
+            Follow the detection rules defined in `.prism/commands/review-pr.md`, but replace
             all references to `skills/` with `.prism/skills/` and `commands/` with `.prism/commands/`.
 
             ## Instructions
@@ -67,7 +67,7 @@ jobs:
             1. Determine the base branch (use `dev` if it exists, otherwise `main`)
             2. Get the list of changed files: `git diff origin/$BASE...HEAD --name-only`
             3. Detect the stack by reading `package.json`, `pyproject.toml`, `requirements.txt`, `go.mod`, `pom.xml`, `build.gradle`, `composer.json`, `Gemfile`, and any `*.csproj` files if they exist
-            4. Auto-detect which profiles to run following the rules in `.prism/commands/review.md` (Step 3)
+            4. Auto-detect which profiles to run following the rules in `.prism/commands/review-pr.md` (Step 4)
             5. Read each selected profile from `.prism/skills/<profile>/SKILL.md`
             6. Run all profiles in parallel and collect findings
             7. Fetch existing review comments to avoid duplicates:
