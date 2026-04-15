@@ -71,12 +71,18 @@ Before writing any code, determine if the comment raises a real issue:
 
 For issues marked as real:
 
-1. **Identify the root cause** — don't patch symptoms. If the comment flags a missing null check, ask why the null is possible in the first place. If it flags a race condition, fix the concurrency design, not just the symptom.
+1. **State the root cause** before editing. Write down (for use in the reply in 2c):
+   - **Structural cause:** what design problem allows the issue to occur (e.g., "input is trusted without validation because the boundary check lives two layers up and doesn't cover this path")
+   - **Why a naive patch is insufficient:** what the symptom-level fix would be and why it would recur or mask the real problem
+   - **Correct design:** what the structural fix is
+
+   **Exemption:** skip this statement for trivial mechanical changes where root-cause framing is overkill — typos, import reorders, renames, formatting, one-line nits. Only apply the exemption when the reviewer's concern is clearly Low severity AND the fix is a one-line mechanical change. When in doubt, write the statement.
+
 2. **Apply the fix** using the Edit tool. The fix must:
-   - Address the structural cause, not paper over it
+   - Address the structural cause identified above, not paper over it
    - Be consistent with the surrounding code style and project conventions
    - Not introduce new issues
-3. **Verify the fix** — re-read the changed code to confirm correctness.
+3. **Verify the fix** — re-read the changed code to confirm it matches the "correct design" you stated.
 
 #### 2c — Reply to the comment
 
@@ -84,7 +90,9 @@ Compose a reply based on the verdict:
 
 **If false positive** — explain concisely why the issue doesn't apply. Be specific: name the caller that handles it, the type that prevents it, or the convention that justifies it. Keep it respectful — the reviewer raised a reasonable concern.
 
-**If real issue, now fixed** — explain what the root cause was and what you changed. Reference the actual fix (e.g., "Added validation in `parseInput()` since the caller doesn't guarantee non-null"), not just "fixed".
+**If real issue, now fixed** — carry forward the root-cause statement from 2b. The reply must name the structural cause and the fix, not just "fixed". Example: "Root cause: `parseInput()` trusted its caller, but the new webhook path bypasses the upstream validator. Fix: moved validation into `parseInput()` itself so every caller is covered."
+
+For the trivial-nit exemption from 2b, a one-line acknowledgement is fine ("Fixed — typo in the error message").
 
 Post the reply. Find the first comment's `id` in the thread via REST:
 ```bash
