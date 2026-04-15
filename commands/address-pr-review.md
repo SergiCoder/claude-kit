@@ -143,14 +143,23 @@ Use this format:
 ```markdown
 ## Review feedback addressed
 
-| # | File | Comment | Verdict | Action |
-|---|------|---------|---------|--------|
-| 1 | `path/to/file:42` | <short description of concern> | Fixed | <what was changed> |
-| 2 | `path/to/other:17` | <short description of concern> | False positive | <why it doesn't apply> |
-| 3 | `path/to/handler:88` | <short description of concern> | Skipped | <why it couldn't be fixed> |
+| Verdict | Critical | High | Medium | Low | Count |
+|---|---|---|---|---|---|
+| Fixed | X | X | X | X | X |
+| False positive | X | X | X | X | X |
+| Skipped | X | X | X | X | X |
+| **Total** | **X** | **X** | **X** | **X** | **X** |
 
-**Result:** X fixed, Y false positives resolved, Z left open
+### Details
+
+| # | File | Severity | Comment | Verdict | Action |
+|---|------|----------|---------|---------|--------|
+| 1 | `path/to/file:42` | High | <short description of concern> | Fixed | <what was changed> |
+| 2 | `path/to/other:17` | Low | <short description of concern> | False positive | <why it doesn't apply> |
+| 3 | `path/to/handler:88` | Medium | <short description of concern> | Skipped | <why it couldn't be fixed> |
 ```
+
+Infer severity from the reviewer's framing (e.g. security/data-loss concerns → Critical/High; style/nits → Low). If unclear, default to Medium.
 
 Use a HEREDOC to pass the body.
 
