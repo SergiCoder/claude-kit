@@ -1,5 +1,5 @@
 ---
-allowed-tools: Bash(git diff*), Bash(git status*), Bash(git ls-files*), Bash(git branch*), Bash(git remote*), Bash(git add*), Bash(git commit*), Bash(git push*), Bash(git restore --staged*), Bash(test -f .git/MERGE_HEAD*), Bash(npx tsc*), Bash(npx vue-tsc*), Bash(mypy *), Bash(pyright *), Bash(go vet *), Read, Glob, Grep
+allowed-tools: Bash(git diff*), Bash(git status*), Bash(git ls-files*), Bash(git branch*), Bash(git remote*), Bash(git add*), Bash(git commit*), Bash(git push*), Bash(git restore --staged*), Bash(test -f .git/MERGE_HEAD*), Bash(npx tsc*), Bash(npx vue-tsc*), Bash(npm test*), Bash(npm run*), Bash(yarn*), Bash(pnpm*), Bash(mypy *), Bash(pyright *), Bash(pytest*), Bash(ruff*), Bash(go vet *), Bash(go test*), Bash(bundle exec*), Bash(vendor/bin/phpunit*), Bash(dotnet build*), Bash(dotnet test*), Read, Glob, Grep
 description: Pre-ship hygiene check, conventional commit, and push
 ---
 Analyze the current git repository state and create well-structured conventional commits, then push.
@@ -57,22 +57,12 @@ If a formatter is found and there are changed files in the relevant language, ru
 
 After formatting, re-stage any files that were already staged and got reformatted (`git add <file>` for each). This ensures formatting changes are included in the commit.
 
-### Step 4 — Type check (if applicable)
+### Step 4 — Verify (typecheck + test + lint)
 
-Check if the project has a type checker configured:
+Run the shared verification checks defined in `commands/_verify.md`. If any check fails and the failure is caused by the changes about to be shipped, stop:
+> "Verification failed: <check>. Fix before shipping."
 
-| Signal | Command |
-|---|---|
-| `tsconfig.json` exists | `npx tsc --noEmit` |
-| `tsconfig.json` + `package.json` deps contain `"vue-tsc"` | `npx vue-tsc --noEmit` |
-| `pyproject.toml` contains `mypy` or `[tool.mypy]` | `mypy .` |
-| `pyproject.toml` contains `pyright` or `pyrightconfig.json` exists | `pyright` |
-| `go.mod` exists | `go vet ./...` |
-
-Only run type checkers that are clearly configured — do not guess. If the type checker reports errors, stop and show them to the user:
-> "Type errors found. Fix them before shipping."
-
-If no type checker is configured, skip this step silently.
+If a check is pre-existing on the base branch, note it and continue.
 
 ### Step 5 — Commit staged changes
 If there are staged changes:

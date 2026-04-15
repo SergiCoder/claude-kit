@@ -1,5 +1,5 @@
 ---
-allowed-tools: Bash(git fetch*), Bash(git checkout*), Bash(git pull*), Bash(git log*), Bash(git diff*), Bash(git status*), Bash(git branch*), Bash(git add *), Bash(git commit*), Bash(git push*), Bash(git tag*), Bash(gh pr list*), Bash(gh pr view*), Bash(gh pr create*), Read, Edit, Grep, Glob
+allowed-tools: Bash(git fetch*), Bash(git checkout*), Bash(git pull*), Bash(git log*), Bash(git diff*), Bash(git status*), Bash(git branch*), Bash(git ls-remote*), Bash(git add *), Bash(git commit*), Bash(git push*), Bash(git tag*), Bash(gh pr list*), Bash(gh pr view*), Bash(gh pr create*), Bash(npx tsc*), Bash(npx vue-tsc*), Bash(npm test*), Bash(npm run*), Bash(yarn*), Bash(pnpm*), Bash(mypy *), Bash(pyright *), Bash(pytest*), Bash(ruff*), Bash(go vet*), Bash(go test*), Bash(bundle exec*), Bash(vendor/bin/phpunit*), Bash(dotnet build*), Bash(dotnet test*), Read, Edit, Grep, Glob
 description: Open a release PR from dev into main for production deploy
 ---
 
@@ -61,7 +61,14 @@ If empty, stop:
 
 Show the commit list to the user.
 
-### Step 4 — Open the release PR
+### Step 4 — Verify (typecheck + test + lint)
+
+Run the shared verification checks defined in `commands/_verify.md` against local `dev`. If any check fails, stop:
+> "Verification failed on dev: <check>. Fix before releasing."
+
+This is a safety net — CI is authoritative, but catching breakage locally avoids opening a release PR on a broken dev.
+
+### Step 5 — Open the release PR
 
 ```bash
 gh pr create \
@@ -88,13 +95,13 @@ Merging `dev` into `main` for production deployment.
 - [ ] Changelog reviewed (if applicable)
 ```
 
-### Step 5 — Return to previous branch
+### Step 6 — Return to previous branch
 
 ```bash
 git checkout -
 ```
 
-### Step 6 — Suggest version bump
+### Step 7 — Suggest version bump
 
 1. **Find the current version.** Search the project root for files containing a version field (look for `"version"` keys or `version =` patterns). Read the first match and extract the current semver value.
 
@@ -110,7 +117,7 @@ git checkout -
 
 5. If the user accepts, apply the version change to the file where it was found.
 
-### Step 7 — Update changelog
+### Step 8 — Update changelog
 
 1. **Check if a changelog file exists** (look for `CHANGELOG.md`, `CHANGELOG`, or similar in the project root). If none exists, skip this step.
 
@@ -137,14 +144,14 @@ git checkout -
 
 4. **Show the changelog entry** to the user for confirmation before writing it.
 
-### Step 8 — Commit and push
+### Step 9 — Commit and push
 
 If any changes were made (version bump, changelog), commit them to `dev` and push before the PR is merged:
 ```
 chore: bump version to <version> and update changelog
 ```
 
-### Step 9 — Tag the release
+### Step 10 — Tag the release
 
 After committing and pushing, create an annotated git tag for the new version and push it:
 

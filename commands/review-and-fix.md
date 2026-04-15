@@ -1,5 +1,5 @@
 ---
-allowed-tools: Bash(git diff*), Bash(git log*), Bash(git branch*), Bash(git status*), Bash(cat*), Bash(grep*), Bash(npm outdated*), Bash(npm audit*), Bash(npm view*), Bash(npm install*), Bash(npm update*), Bash(yarn outdated*), Bash(yarn audit*), Bash(yarn upgrade*), Bash(pnpm outdated*), Bash(pnpm audit*), Bash(pnpm update*), Bash(pip list*), Bash(pip-audit*), Bash(pip index*), Bash(pip install*), Bash(go list*), Bash(go get*), Bash(go version*), Bash(bundle outdated*), Bash(bundle update*), Bash(composer outdated*), Bash(composer update*), Bash(mvn versions*), Bash(dotnet list*), Bash(dotnet add*), Bash(node --version*), Bash(python --version*), Bash(python3 --version*), Bash(ruby --version*), Bash(php --version*), Bash(java --version*), Bash(dotnet --version*), Read, Edit, Write, Glob, Grep, Agent
+allowed-tools: Bash(git diff*), Bash(git log*), Bash(git branch*), Bash(git status*), Bash(cat*), Bash(grep*), Bash(npm outdated*), Bash(npm audit*), Bash(npm view*), Bash(npm install*), Bash(npm update*), Bash(yarn outdated*), Bash(yarn audit*), Bash(yarn upgrade*), Bash(pnpm outdated*), Bash(pnpm audit*), Bash(pnpm update*), Bash(pip list*), Bash(pip-audit*), Bash(pip index*), Bash(pip install*), Bash(go list*), Bash(go get*), Bash(go version*), Bash(bundle outdated*), Bash(bundle update*), Bash(composer outdated*), Bash(composer update*), Bash(mvn versions*), Bash(dotnet list*), Bash(dotnet add*), Bash(node --version*), Bash(python --version*), Bash(python3 --version*), Bash(ruby --version*), Bash(php --version*), Bash(java --version*), Bash(dotnet --version*), Bash(npm run*), Bash(npm test*), Bash(yarn*), Bash(pnpm*), Bash(npx tsc*), Bash(tsc*), Bash(pytest*), Bash(mypy*), Bash(ruff*), Bash(go build*), Bash(go test*), Bash(go vet*), Bash(bundle exec*), Bash(vendor/bin/phpunit*), Bash(dotnet build*), Bash(dotnet test*), Read, Edit, Write, Glob, Grep, Agent
 description: Review code changes and fix all findings automatically
 ---
 
@@ -166,7 +166,11 @@ If a finding crosses domains, defer to the profile listed first in the ownership
 
 Launch ALL agents in parallel. Do NOT run sequentially.
 
-### Step 5 — Collect and present results
+### Step 5 — Verify nothing broke
+
+After all agents finish applying fixes, run the shared verification checks defined in `commands/_verify.md` to confirm the edits didn't introduce regressions. Record which checks ran and their pass/fail status for the final report.
+
+### Step 6 — Collect and present results
 
 Wait for all agents to complete, then present:
 
@@ -178,6 +182,7 @@ Wait for all agents to complete, then present:
 **Files changed:** <count>
 **Stack detected:** <languages and frameworks>
 **Profiles run:** <list>
+**Verification:** <which checks ran, pass/fail>
 
 ---
 
@@ -204,11 +209,12 @@ Wait for all agents to complete, then present:
 **Do NOT include writing profiles (testing, documentation, dependencies) in the summary table.** Show their results only in their dedicated sections above.
 ```
 
-### Final output
+### Step 7 — Final output
 
 ```
 Review & fix complete: X findings fixed, Y tests written, Z docs updated, W packages upgraded across N profiles.
 ```
 
-- If all findings were fixed: "All findings resolved. Ready for PR."
+- If all findings were fixed and verification passed: "All findings resolved and checks passing. Ready for PR."
+- If verification failed: list the failing checks and say "Fixes applied but verification failed — review before opening PR."
 - If some findings could not be auto-fixed: list them with explanation and say "These require manual intervention."

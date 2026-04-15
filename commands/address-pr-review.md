@@ -1,5 +1,5 @@
 ---
-allowed-tools: Bash(git diff*), Bash(git log*), Bash(git branch*), Bash(git status*), Bash(git push*), Bash(git add *), Bash(git commit*), Bash(gh pr view*), Bash(gh api *), Read, Edit, Glob, Grep, Agent
+allowed-tools: Bash(git diff*), Bash(git log*), Bash(git branch*), Bash(git status*), Bash(git push*), Bash(git add *), Bash(git commit*), Bash(gh pr view*), Bash(gh pr comment*), Bash(gh api *), Bash(git remote*), Bash(npx tsc*), Bash(npx vue-tsc*), Bash(npm test*), Bash(npm run*), Bash(yarn*), Bash(pnpm*), Bash(mypy *), Bash(pyright *), Bash(pytest*), Bash(ruff*), Bash(go vet*), Bash(go test*), Bash(bundle exec*), Bash(vendor/bin/phpunit*), Bash(dotnet build*), Bash(dotnet test*), Read, Edit, Glob, Grep, Agent
 description: Address inline PR review comments — validate, fix root causes, reply, and resolve
 ---
 
@@ -112,7 +112,13 @@ gh api graphql -f query='mutation { resolveReviewThread(input: {threadId: "{thre
 
 Do NOT resolve if the issue is real but you couldn't fix it — leave it open and note why in your reply.
 
-### Step 3 — Commit and push fixes
+### Step 3 — Verify fixes
+
+If any files were modified, run the shared verification checks defined in `commands/_verify.md` before committing. If a check fails due to a fix, repair it and re-run before proceeding.
+
+If no files were modified, skip this step.
+
+### Step 4 — Commit and push fixes
 
 If any files were modified:
 
@@ -130,7 +136,7 @@ If any files were modified:
 
 If no files were modified (all comments were false positives), skip this step.
 
-### Step 4 — Post summary comment on the PR
+### Step 5 — Post summary comment on the PR
 
 Post a summary comment on the PR so reviewers see what was addressed:
 

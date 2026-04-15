@@ -1,5 +1,5 @@
 ---
-allowed-tools: Bash(git fetch*), Bash(git rebase*), Bash(git diff*), Bash(git branch*), Bash(git push*), Bash(git log*), Bash(git status*), Bash(gh pr create*), Bash(gh pr view*), Read
+allowed-tools: Bash(git fetch*), Bash(git rebase*), Bash(git diff*), Bash(git branch*), Bash(git push*), Bash(git log*), Bash(git status*), Bash(gh pr create*), Bash(gh pr view*), Bash(npx tsc*), Bash(npx vue-tsc*), Bash(npm test*), Bash(npm run*), Bash(yarn*), Bash(pnpm*), Bash(mypy *), Bash(pyright *), Bash(pytest*), Bash(ruff*), Bash(go vet*), Bash(go test*), Bash(bundle exec*), Bash(vendor/bin/phpunit*), Bash(dotnet build*), Bash(dotnet test*), Read
 description: Sync base branch, run relevant tests, open a PR
 ---
 
@@ -43,16 +43,12 @@ git diff origin/<base>...HEAD --name-only
 If empty, stop:
 > "No changes compared to <base> — nothing to PR."
 
-### Step 5 — Run relevant tests
+### Step 5 — Verify (typecheck + test + lint)
 
-Look at the changed file paths and detect the test runner from project config:
-- Check dependency manifests, test config files, and `Makefile` for a test target
-- Use the project's configured test command
+Run the shared verification checks defined in `commands/_verify.md`, scoping tests to changed areas when supported. If any check fails due to the branch's changes, stop:
+> "Verification failed: <check>. Fix before opening a PR."
 
-Run only the test suites for areas that have changed files. Tell the user which suite you're running before running it. If tests fail, stop:
-> "Tests failed. Fix the failures before opening a PR."
-
-If no test runner is detectable, skip this step and note it in the PR.
+Note any pre-existing failures in the PR body under Testing.
 
 ### Step 6 — Build the PR description
 
