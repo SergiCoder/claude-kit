@@ -68,15 +68,7 @@ Run the shared verification checks defined in `commands/_verify.md` against loca
 
 This is a safety net — CI is authoritative, but catching breakage locally avoids opening a release PR on a broken dev.
 
-### Step 5 — Open the release PR
-
-```bash
-gh pr create \
-  --base main \
-  --head dev \
-  --title "release: merge dev into main" \
-  --body "<body>"
-```
+### Step 5 — Confirm and open the release PR
 
 Body:
 ```markdown
@@ -93,6 +85,31 @@ Merging `dev` into `main` for production deployment.
 - [ ] CI passes
 - [ ] No open PRs targeting dev that should be included
 - [ ] Changelog reviewed (if applicable)
+```
+
+Show the user what's about to be created before calling `gh pr create`:
+
+```
+About to open release PR:
+  Base:    main
+  Head:    dev
+  Title:   release: merge dev into main
+  Commits: N (listed above)
+  Body:
+  ---
+  <filled-body>
+  ---
+Proceed? [y/n]
+```
+
+Wait for approval. Only after the user confirms:
+
+```bash
+gh pr create \
+  --base main \
+  --head dev \
+  --title "release: merge dev into main" \
+  --body "<body>"
 ```
 
 ### Step 6 — Return to previous branch
@@ -151,9 +168,19 @@ If any changes were made (version bump, changelog), commit them to `dev` and pus
 chore: bump version to <version> and update changelog
 ```
 
-### Step 10 — Tag the release
+### Step 10 — Confirm and tag the release
 
-After committing and pushing, create an annotated git tag for the new version and push it:
+Tags on `main` are effectively permanent — deleting a pushed tag is noisy and can break downstream consumers. Confirm before tagging:
+
+```
+About to tag the release:
+  Tag:     v<version>
+  Commit:  <short-sha> <commit-subject>
+  Remote:  origin
+Proceed? [y/n]
+```
+
+Wait for approval. Only after the user confirms:
 
 ```bash
 git tag -a v<version> -m "v<version>"

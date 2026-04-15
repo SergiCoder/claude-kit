@@ -30,6 +30,17 @@ If rebase fails with conflicts, stop:
 
 ### Step 3 — Push
 
+Check whether the rebase moved commits (i.e., HEAD differs from the pre-rebase remote tracking tip). If it did, the push will rewrite remote history — confirm with the user first:
+
+```bash
+git log @{u}..HEAD --oneline   # commits that would be force-pushed
+git log HEAD..@{u} --oneline   # commits on remote that would be dropped
+```
+
+> "Rebase rewrote N local / dropped M remote commit(s). Force-push with lease? [y/n]"
+
+If the branch is a clean fast-forward (no remote commits dropped), skip the prompt.
+
 ```bash
 git push --force-with-lease
 ```
@@ -83,7 +94,23 @@ Build the PR body:
 - [ ] PR targets the correct base branch
 ```
 
-### Step 7 — Open the PR
+### Step 7 — Confirm and open the PR
+
+Show the user exactly what's about to be created before calling `gh pr create`:
+
+```
+About to open PR:
+  Base:   <base>
+  Head:   <current-branch>
+  Title:  <type>(<scope>): <summary>
+  Body:
+  ---
+  <filled-body>
+  ---
+Proceed? [y/n]
+```
+
+Wait for approval. Only after the user confirms:
 
 ```bash
 gh pr create \
