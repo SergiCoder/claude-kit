@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.11.0] - 2026-04-15
+
+### Added
+- Shared `_verify.md` defines the post-action verification checks (typecheck, test, lint) and is referenced from `ship`, `open-pr`, `release`, `address-pr-review`, and `review-and-fix` so every post-action flow confirms nothing broke before declaring success
+- Confirmation gates before high-blast-radius actions: `open-pr` prompts before `git push --force-with-lease` when the rebase rewrote history (skipped on clean fast-forwards) and shows a PR preview before `gh pr create`; `release` confirms the PR body/base/head before creation and the tag name/target before tag push
+
+### Changed
+- `address-pr-review` Step 2b now requires an explicit root-cause statement (structural cause / why naive patch fails / correct design) before editing, and Step 2c carries that statement into the reviewer reply so the reasoning is visible — trivial Low-severity one-line mechanical fixes are exempt
+
 ## [1.10.0] - 2026-04-15
 
 ### Added
