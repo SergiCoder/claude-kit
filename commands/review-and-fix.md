@@ -195,11 +195,11 @@ Wait for all agents to complete, then present:
 
 ## Summary
 
-| Profile | Fixed | Skipped (CI-only) |
-|---|---|---|
-| security | X | X |
-| quality | X | X |
-| **Total** | **X** | **X** |
+| Profile | Critical | High | Medium | Low | Fixed | Skipped (CI-only) |
+|---|---|---|---|---|---|---|
+| security | X | X | X | X | X | X |
+| quality | X | X | X | X | X | X |
+| **Total** | **X** | **X** | **X** | **X** | **X** | **X** |
 
 **Do NOT include writing profiles (testing, documentation, dependencies) in the summary table.** Show their results only in their dedicated sections above.
 ```
