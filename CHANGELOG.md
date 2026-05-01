@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.12.0] - 2026-05-01
+
+### Changed
+- `ship` no longer inlines full `git diff --cached` and `git diff` output in its prompt — only `--stat` summaries are loaded up-front; the full diff is fetched on demand via `git diff <path>` when a commit message needs it. Substantially reduces token cost on non-trivial branches.
+- `ship` reordered to fail fast: verify (typecheck/test/lint) now runs before the hygiene scan and commit-message generation, so a broken working tree stops the command before any speculative file reads or commit drafting.
+- `ship` hygiene scan narrowed to 0-byte files and obvious scaffolding leftovers; broad orphan/duplicate searches across the tree have been removed.
+- All commands now pin a `model:` for predictable cost and quality: `open-pr` runs on Opus 4.7; `address-pr-review`, `create-branch`, `install-ci-review`, `release`, `review-and-fix`, `review-and-report-only`, `review-pr`, and `ship` run on Sonnet 4.6.
+
 ## [1.11.0] - 2026-04-15
 
 ### Added

@@ -1,6 +1,7 @@
 ---
 allowed-tools: Bash(git diff*), Bash(git log*), Bash(git branch*), Bash(git status*), Bash(cat*), Bash(grep*), Bash(gh pr view*), Bash(gh api*), Bash(npm outdated*), Bash(npm audit*), Bash(npm view*), Bash(yarn outdated*), Bash(yarn audit*), Bash(pnpm outdated*), Bash(pnpm audit*), Bash(pip list*), Bash(pip-audit*), Bash(pip index*), Bash(go list*), Bash(go version*), Bash(bundle outdated*), Bash(composer outdated*), Bash(mvn versions*), Bash(dotnet list*), Bash(node --version*), Bash(python --version*), Bash(python3 --version*), Bash(ruby --version*), Bash(php --version*), Bash(java --version*), Bash(dotnet --version*), Read, Glob, Grep, Agent
 description: Review current branch's PR and post inline comments with a summary
+model: claude-sonnet-4-6
 ---
 
 Review code changes on the current branch and post findings as inline comments on the associated PR.

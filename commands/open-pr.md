@@ -1,6 +1,7 @@
 ---
 allowed-tools: Bash(git fetch*), Bash(git rebase*), Bash(git diff*), Bash(git branch*), Bash(git push*), Bash(git log*), Bash(git status*), Bash(gh pr create*), Bash(gh pr view*), Bash(npx tsc*), Bash(npx vue-tsc*), Bash(npm test*), Bash(npm run*), Bash(yarn*), Bash(pnpm*), Bash(mypy *), Bash(pyright *), Bash(pytest*), Bash(ruff*), Bash(go vet*), Bash(go test*), Bash(bundle exec*), Bash(vendor/bin/phpunit*), Bash(dotnet build*), Bash(dotnet test*), Read
 description: Sync base branch, run relevant tests, open a PR
+model: claude-opus-4-7
 ---
 
 Open a pull request for the current branch.

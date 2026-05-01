@@ -1,6 +1,7 @@
 ---
 allowed-tools: Bash(git diff*), Bash(git log*), Bash(git branch*), Bash(git status*), Bash(cat*), Bash(grep*), Bash(npm outdated*), Bash(npm audit*), Bash(npm view*), Bash(npm install*), Bash(npm update*), Bash(yarn outdated*), Bash(yarn audit*), Bash(yarn upgrade*), Bash(pnpm outdated*), Bash(pnpm audit*), Bash(pnpm update*), Bash(pip list*), Bash(pip-audit*), Bash(pip index*), Bash(pip install*), Bash(go list*), Bash(go get*), Bash(go version*), Bash(bundle outdated*), Bash(bundle update*), Bash(composer outdated*), Bash(composer update*), Bash(mvn versions*), Bash(dotnet list*), Bash(dotnet add*), Bash(node --version*), Bash(python --version*), Bash(python3 --version*), Bash(ruby --version*), Bash(php --version*), Bash(java --version*), Bash(dotnet --version*), Bash(npm run*), Bash(npm test*), Bash(yarn*), Bash(pnpm*), Bash(npx tsc*), Bash(tsc*), Bash(pytest*), Bash(mypy*), Bash(ruff*), Bash(go build*), Bash(go test*), Bash(go vet*), Bash(bundle exec*), Bash(vendor/bin/phpunit*), Bash(dotnet build*), Bash(dotnet test*), Read, Edit, Write, Glob, Grep, Agent
 description: Review code changes and fix all findings automatically
+model: claude-sonnet-4-6
 ---
 
 Review code changes on the current branch using specialized reviewer profiles, then automatically fix all findings.

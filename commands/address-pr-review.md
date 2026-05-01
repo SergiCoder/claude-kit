@@ -1,6 +1,7 @@
 ---
 allowed-tools: Bash(git diff*), Bash(git log*), Bash(git branch*), Bash(git status*), Bash(git push*), Bash(git add *), Bash(git commit*), Bash(gh pr view*), Bash(gh pr comment*), Bash(gh api *), Bash(git remote*), Bash(npx tsc*), Bash(npx vue-tsc*), Bash(npm test*), Bash(npm run*), Bash(yarn*), Bash(pnpm*), Bash(mypy *), Bash(pyright *), Bash(pytest*), Bash(ruff*), Bash(go vet*), Bash(go test*), Bash(bundle exec*), Bash(vendor/bin/phpunit*), Bash(dotnet build*), Bash(dotnet test*), Read, Edit, Glob, Grep, Agent
 description: Address inline PR review comments — validate, fix root causes, reply, and resolve
+model: claude-sonnet-4-6
 ---
 
 Address unresolved inline review comments on the current branch's PR.

@@ -1,6 +1,7 @@
 ---
 allowed-tools: Bash(mkdir*), Bash(cp*), Bash(cat*), Bash(git status*), Read, Write, Glob
 description: Install the Prism CI review workflow into the current project
+model: claude-sonnet-4-6
 ---
 Install the Prism automated PR review workflow into the current project.
 

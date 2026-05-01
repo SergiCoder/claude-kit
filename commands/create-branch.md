@@ -1,6 +1,7 @@
 ---
 allowed-tools: Bash(git fetch*), Bash(git checkout*), Bash(git pull*), Bash(git push*)
 description: Create a feature, fix, or hotfix branch from the correct base
+model: claude-sonnet-4-6
 ---
 Create a new git branch using the project's branching strategy.
 

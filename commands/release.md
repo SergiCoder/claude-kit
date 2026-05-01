@@ -1,6 +1,7 @@
 ---
 allowed-tools: Bash(git fetch*), Bash(git checkout*), Bash(git pull*), Bash(git log*), Bash(git diff*), Bash(git status*), Bash(git branch*), Bash(git ls-remote*), Bash(git add *), Bash(git commit*), Bash(git push*), Bash(git tag*), Bash(gh pr list*), Bash(gh pr view*), Bash(gh pr create*), Bash(npx tsc*), Bash(npx vue-tsc*), Bash(npm test*), Bash(npm run*), Bash(yarn*), Bash(pnpm*), Bash(mypy *), Bash(pyright *), Bash(pytest*), Bash(ruff*), Bash(go vet*), Bash(go test*), Bash(bundle exec*), Bash(vendor/bin/phpunit*), Bash(dotnet build*), Bash(dotnet test*), Read, Edit, Grep, Glob
 description: Open a release PR from dev into main for production deploy
+model: claude-sonnet-4-6
 ---
 
 Open a pull request from `dev` into `main` for a production release.
