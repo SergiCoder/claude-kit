@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.14.0] - 2026-05-14
+
+### Added
+- `stack-nextjs` — three new rules: Server Actions must not `fetch()` their own `/api/*` routes (extract a server-only helper); resource-by-ID pages (`app/.../[id]/page.tsx`) must verify session ownership before rendering; `export const dynamic = "force-dynamic"` is only valid on pages that call `cookies()` / `headers()` / `auth()` — read-mostly pages use `revalidate`.
+- `security` — outbound URLs must never be constructed from request headers (`host`, `x-forwarded-host`, `x-forwarded-proto`); base URLs come from env vars validated at startup (SSRF).
+- `rest-api` — webhook handlers must map errors by retry-ability: `4xx` when retrying won't change the outcome (invalid signature, schema failure, unknown resource); `5xx` for transient failures (DB down, downstream timeout) — never a blanket `400` catch-all.
+
 ## [1.13.0] - 2026-05-10
 
 ### Added
